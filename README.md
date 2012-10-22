@@ -34,6 +34,7 @@ Your model will now have a settings method which you can use to get and set valu
     user = User.first
     user.settings => {}
     user.settings.my_setting = "foo"
+    user.settings.my_setting => "foo"
     user.settings => { "my_setting" => "foo" }
 
 To persist, call save or save! on the parent. Eg;

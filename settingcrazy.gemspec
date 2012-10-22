@@ -4,8 +4,8 @@ require File.expand_path('../lib/settingcrazy/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Dan Draper"]
   gem.email         = ["daniel@codefire.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{An advanced setting manager for ActiveRecord models}
+  gem.summary       = %q{An advanced setting manager for ActiveRecord models}
   gem.homepage      = ""
 
   gem.add_development_dependency "rspec", "~> 2.11.0"

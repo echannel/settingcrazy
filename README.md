@@ -41,6 +41,10 @@ To persist, call save or save! on the parent. Eg;
 
     user.save
 
+### Serializable Values
+
+TODO
+
 ### Setting Inheritance
 
 Your settings can inherit from the settings of a parent.
@@ -63,9 +67,11 @@ Your settings can inherit from the settings of a parent.
     room = house.rooms.create
     room.settings.color => "blue"
 
-### Templates
+### Setting Templates
 
 TODO
+
+### Mass Assignment and Usage in Forms
 
 ### Advanced Usage
 

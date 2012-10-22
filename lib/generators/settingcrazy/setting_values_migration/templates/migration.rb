@@ -1,4 +1,4 @@
-class CreateSettingValues < ActiveRecord::Migration
+class CreateSettingsValues < ActiveRecord::Migration
   def change
     create_table :setting_values do |t|
       t.string :value

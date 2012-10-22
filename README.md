@@ -16,9 +16,59 @@ Or install it yourself as:
 
     $ gem install settingcrazy
 
+Finally, create a migration and run:
+
+    $ rails g settingcrazy:setting_values_migration
+    $ rake db:migrate
+
 ## Usage
 
-TODO: Write usage instructions here
+To use simply include the SettingCrazy module in any ActiveRecord model that you want to have settings:
+
+    class User < ActiveRecord::Base
+      include SettingCrazy
+    end
+
+Your model will now have a settings method which you can use to get and set values.
+
+    user = User.first
+    user.settings => {}
+    user.settings.my_setting = "foo"
+    user.settings => { "my_setting" => "foo" }
+
+To persist, call save or save! on the parent. Eg;
+
+    user.save
+
+### Setting Inheritance
+
+Your settings can inherit from the settings of a parent.
+
+    class House < ActiveRecord::Base
+      include SettingCrazy
+      has_many :rooms
+    end
+
+    class Room < ActiveRecord::Base
+      include SettingCrazy
+      belongs_to :house
+      settings_inherit_via :house
+    end
+
+    house = House.create(...)
+    house.settings.color = "blue"
+    house.save!
+
+    room = house.rooms.create
+    room.settings.color => "blue"
+
+### Templates
+
+TODO
+
+### Advanced Usage
+
+TODO: Talk about setting groups
 
 ## Contributing
 

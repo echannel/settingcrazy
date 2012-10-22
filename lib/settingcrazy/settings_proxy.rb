@@ -12,7 +12,6 @@ module SettingCrazy
       if sv.blank?
         @model.setting_values.build(:key => key, :value => value)
       else
-        # TODO: DOes this save? It shouldn't
         sv.update_attribute(:value, value)
       end
     end
@@ -27,7 +26,7 @@ module SettingCrazy
     end
 
     def delete(key)
-      setting_record(key).try(:destroy)
+      @model.setting_values.delete(setting_record(key))
     end
 
     def method_missing(method_name, *args, &block)
@@ -74,8 +73,7 @@ module SettingCrazy
         if template.present? && !template.valid_option?(attribute)
           raise ActiveRecord::UnknownAttributeError
         end
-        # TODO: How do we handle many values??
-        @model.setting_values.where(:key => attribute).first
+        @model.setting_values.where(:key => attribute.to_s).first
       end
   end
 end

@@ -1,33 +1,38 @@
 require 'spec_helper'
 
-class ExampleTemplate
-  def self.valid_option?(key)
-    puts "Checking #{key}"
-    %w(foo bar).include?(key.to_s)
-  end
-
-  def self.defaults
-    {
-      :foo => "1234",
-      :bar => "A string default"
-    }
-  end
-end
-
 describe SettingCrazy::SettingsProxy do
   let(:model) { VendorInstance.create(:name => "VI") }
 
   context "no template" do
     subject   { SettingCrazy::SettingsProxy.new(model, nil) }
-    before    { subject.foo = "bar"; model.save! }
-    its(:foo) { should == 'bar' }
-    its(:oth) { should be(nil) }
-    it        { subject[:foo].should == 'bar' }
-    it        { subject[:oth].should be(nil) }
 
-    describe "update a value" do
-      before { subject.foo = "different"; model.save! }
-      its(:foo) { should == "different" }
+    context "single values" do
+      before    { subject.foo = "bar"; model.save! }
+      its(:foo) { should == 'bar' }
+      its(:oth) { should be(nil) }
+      it        { subject[:foo].should == 'bar' }
+      it        { subject[:oth].should be(nil) }
+
+      describe "update a value" do
+        before { subject.foo = "different" }
+        its(:foo) { should == "different" }
+      end
+    end
+
+    context "multiple values" do
+      before do
+        subject.foo = %w(a b c)
+        model.save!
+      end
+
+      its(:foo) { should == [ 'a', 'b', 'c' ] }
+
+      describe "update a value" do
+        before do
+          subject.foo = %w(d e f)
+        end
+        its(:foo) { should == [ 'd', 'e', 'f' ] }
+      end
     end
   end
 

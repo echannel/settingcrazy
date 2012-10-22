@@ -1,0 +1,8 @@
+* Handle multi-valued settings
+* Missing association for parent
+* More specs
+* think some more about saving and record consistency. Settings don't get saved until we save the parent record. That may be OK but calling a getter should perhaps return the correct (albeit unsaved) value?
+* Clean up mass-assignment
+* Generalise setting groups
+* Docs
+* Migration Generator

@@ -53,6 +53,7 @@ module SettingCrazy
     end
 
     def inspect
+      @model.reload unless @model.new_record?
       @model.setting_values.inject({}) do |hash, sv|
         hash[sv.key] = sv.value
         hash

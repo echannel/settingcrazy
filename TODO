@@ -1,5 +1,7 @@
-* More specs (eg; for use_template with a block)
 * think some more about saving and record consistency. Settings don't get saved until we save the parent record. That may be OK but calling a getter should perhaps return the correct (albeit unsaved) value?
   - implement new_record? changed? (maybe even changes) methods
   - active record makes this hard to do in current form. We would actually need to build a second setting value when we change something and then replace the entire collection when we save the owner
-* Docs
+* RDoc
+* Serialize only for arrays (reject blanks too) - may need to add a serialize column
+* Template Validators
+* Template docs

@@ -12,7 +12,7 @@ module SettingCrazy
     base.extend ClassMethods
     base.send(:include, InstanceMethods)
     base.class_eval <<-EVAL
-      has_many :setting_values, :class_name => SettingCrazy::SettingValue, :as => :settable, :autosave => true
+      has_many :setting_values, :class_name => "SettingCrazy::SettingValue", :as => :settable, :autosave => true
     EVAL
   end
 

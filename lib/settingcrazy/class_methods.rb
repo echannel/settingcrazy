@@ -4,9 +4,8 @@ module SettingCrazy
       @template = template || block
     end
 
-    def settings_inherit_via(reflection)
-      @inherit_via = reflection
-      # TODO: Do a reflection look up to make sure its valid
+    def settings_inherit_via(reflection, options = {})
+      @inheritor = Inheritor.new(reflection, options)
     end
 
     def setting_namespace(name, options = {})
@@ -14,8 +13,8 @@ module SettingCrazy
       @setting_namespaces[name.to_sym] = Namespace.new(name, options)
     end
 
-    def _inherit_via
-      @inherit_via
+    def _inheritor
+      @inheritor
     end
 
     def _setting_namespaces

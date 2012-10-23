@@ -124,6 +124,18 @@ Setting namespaces work with bulk setting and mass assignment too:
       },
     }
 
+You can also set templates to work per namespace:
+
+    setting_namespace :weekdays, :template => WeekDayTemplate
+
+When inheriting via a parent with namespaces you may like to specify a namespace to inherit from instead of just the settings as a whole.
+
+    settings_inherit_via :house, :namespace => :a_namespace
+
+Or, you can even use a proc
+
+    settings_inherit_via :house, :namespace => Proc.new { |room| room.parent_setting_namespace }
+
 ## Contributing
 
 1. Fork it

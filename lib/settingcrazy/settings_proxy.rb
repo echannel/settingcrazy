@@ -54,9 +54,8 @@ module SettingCrazy
     end
 
     def parent_settings
-      return nil if @model.class._inherit_via.blank? || @model.send(@model.class._inherit_via).blank?
-      # TODO: Check for settings_groups!? And only use the same template
-      @model.send(@model.class._inherit_via).settings
+      return nil unless @model.class._inheritor.present?
+      @model.class._inheritor.parent_settings_for(@model)
     end
 
     def each(&block)

@@ -1,5 +1,3 @@
-require File.expand_path(File.dirname(__FILE__) + "/enum")
-
 module SettingCrazy
   module Template
     class Base
@@ -8,6 +6,10 @@ module SettingCrazy
 
         def enum(id, name=id.to_s, options={}, &block)
           enums[id] = Scenario::Setting::Enum.new(name, options, &block)
+        end
+
+        def enums
+          @enums ||= {}
         end
 
         # Returns an array suitable for use in options_for_select helper
@@ -42,11 +44,6 @@ module SettingCrazy
           {}
         end
 
-        def enums
-          @@enums ||= {}
-        end
-
-
         # # Maybe too complicated
         # def self.validator_klass
         #   class_eval <<-STR
@@ -59,7 +56,7 @@ module SettingCrazy
         # def validator
         #   self.class.validator.new
         # end
-        end
+      end
     end
   end
 end

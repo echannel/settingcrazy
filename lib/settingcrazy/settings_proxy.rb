@@ -3,25 +3,40 @@ module SettingCrazy
     attr_reader :template
 
     def initialize(model, template)
-      @model = model
-      @template = template
+      @model      = model
+      @template   = template
+      @namespaces = model.class._setting_namespaces
+      # TODO: It would probably be a good idea to memoize the NamespacedSettingsProxies
     end
 
     def []=(key, value)
+      if @namespaces && namespace = @namespaces[key.to_sym]
+        return NamespacedSettingsProxy.new(@model, namespace).bulk_assign(value)
+      end
+
       sv = setting_record(key)
       if sv.blank?
-        @model.setting_values.build(:key => key, :value => value)
+        build_value(key, value)
       else
         sv.update_attribute(:value, value)
       end
     end
 
     def [](key)
+      if @namespaces && namespace = @namespaces[key.to_sym]
+        return NamespacedSettingsProxy.new(@model, namespace)
+      end
       sv = setting_record(key)
       if sv.blank?
         parent_value(key) || template_default_value(key) || nil
       else
         sv.value
+      end
+    end
+
+    def bulk_assign(attributes)
+      attributes.each do |(k,v)|
+        self[k] = v
       end
     end
 
@@ -45,21 +60,22 @@ module SettingCrazy
     end
     
     def each(&block)
-      @model.setting_values.each(&block)
+      setting_values.each(&block)
     end
 
     def map(&block)
-      @model.setting_values.map(&block)
+      setting_values.map(&block)
     end
 
     def inspect
-      @model.setting_values.inject({}) do |hash, sv|
+      @model.reload unless @model.new_record?
+      setting_values.inject({}) do |hash, sv|
         hash[sv.key] = sv.value
         hash
       end.inspect
     end
 
-    private
+    protected
       def template_default_value(key)
         template.present? ? template.defaults[key] : nil
       end
@@ -73,7 +89,15 @@ module SettingCrazy
         if template.present? && !template.valid_option?(attribute)
           raise ActiveRecord::UnknownAttributeError
         end
-        @model.setting_values.where(:key => attribute.to_s).first
+        setting_values.where(:key => attribute.to_s).first
+      end
+
+      def build_value(key, value)
+        @model.setting_values.build(:key => key, :value => value)
+      end
+
+      def setting_values
+        @model.setting_values
       end
   end
 end

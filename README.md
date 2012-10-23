@@ -73,9 +73,56 @@ TODO
 
 ### Mass Assignment and Usage in Forms
 
-### Advanced Usage
+You can easily bulk set settings using a hash.
 
-TODO: Talk about setting groups
+    house.settings = { :foo => "bar", :fruit => "apple" }
+
+This extends to mass assignment:
+
+    house.attributes = {
+      :settings => { :foo => "bar", :fruit => "apple" }
+    }
+
+If using in a form you can use fields for (eg in Haml):
+
+    = form.fields_for :settings, @house.settings do |setting|
+      = setting.text_field :foo
+
+### Setting Namespaces
+
+If you have a model that needs settings to be divided in some way (perhaps by functional area) you can use a namespace.
+
+    class Scenario < ActiveRecord::Base
+      include SettingCrazy
+
+      setting_namespace :weekdays
+      setting_namespace :weekends
+    end
+
+Now you can access your settings like so:
+
+    scenario = Scenario.find(...)
+    scenario.settings.weekends.foo = "bar"
+    scenario.settings.weekends.foo => "bar"
+    scenario.settings.weekdays.foo => nil
+
+    scenario.settings.weekends => { :foo => "bar" }
+
+Not providing a namespace still works and will access all settings:
+
+    scenario.settings.foo => "bar"
+
+Setting namespaces work with bulk setting and mass assignment too:
+
+    scenario.settings.weekends = { :foo => "bar" }
+
+    scenario.attributes = {
+      :settings => {
+        :weekends => {
+          :foo => "bar
+        },
+      },
+    }
 
 ## Contributing
 

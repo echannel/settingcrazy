@@ -8,5 +8,13 @@ module SettingCrazy
 
       super(values, options)
     end
+
+    def settings
+      @settings ||= SettingsProxy.new(self, self.class.setting_template(self))
+    end
+
+    def settings=(attributes)
+      settings.bulk_assign(attributes)
+    end
   end
 end

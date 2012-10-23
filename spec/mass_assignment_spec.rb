@@ -10,7 +10,6 @@ describe VendorInstance do
         :foo => "1234",
         :bar => "abcd"
       }
-      # TODO: We ideally wouldn't need this
       model.save!
     end
 
@@ -31,5 +30,40 @@ describe VendorInstance do
 
     its(:foo) { should == "some value" }
     its(:wee) { should == "another" }
+  end
+
+  describe "setting namespaces" do
+    let(:model) { Scenario.create(:name => "Scenario") }
+    subject     { model.settings.google }
+
+    context "direct assignment" do
+      before do
+        model.settings.google = {
+          :foo => "1234",
+          :bar => "abcd"
+        }
+        model.save!
+      end
+
+      its(:foo) { should == "1234" }
+      its(:bar) { should == "abcd" }
+    end
+
+    context "mass assignment" do
+      before do
+        model.attributes = {
+          :settings => {
+            :google => { 
+              :foo => "some value",
+              :wee => "another",
+            }
+          }
+        }
+        model.save!
+      end
+
+      its(:foo) { should == "some value" }
+      its(:wee) { should == "another" }
+    end
   end
 end

@@ -36,8 +36,8 @@ module SettingCrazy
         # Returns whether single keyword valid
         # TODO: Allow passing of key or array of keys
         def valid_option?(key)
-          key = key.to_getter.to_sym #strip setter (=) from key, so can just check options hash
-          template.present? && available_options.keys.include?(key)
+          key = key.to_s.gsub(/\=$/,'').to_sym #strip setter (=) from key, so can just check options hash
+          available_options.keys.include?(key)
         end
 
         def defaults

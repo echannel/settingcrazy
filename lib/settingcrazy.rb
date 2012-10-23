@@ -7,6 +7,7 @@ require "settingcrazy/namespaced_settings_proxy"
 require "settingcrazy/setting_value"
 require "settingcrazy/class_methods"
 require "settingcrazy/instance_methods"
+require "settingcrazy/template"
 
 module SettingCrazy
   def self.included(base)

@@ -58,7 +58,7 @@ module SettingCrazy
       # TODO: Check for settings_groups!? And only use the same template
       @model.send(@model.class._inherit_via).settings
     end
-    
+
     def each(&block)
       setting_values.each(&block)
     end

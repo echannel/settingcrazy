@@ -9,8 +9,17 @@ module SettingCrazy
       # TODO: Do a reflection look up to make sure its valid
     end
 
+    def setting_namespace(name, options = {})
+      @setting_namespaces ||= {}
+      @setting_namespaces[name.to_sym] = Namespace.new(name, options)
+    end
+
     def _inherit_via
       @inherit_via
+    end
+
+    def _setting_namespaces
+      @setting_namespaces
     end
 
     def setting_template(record)

@@ -72,7 +72,7 @@ module SettingCrazy
     end
 
     def to_hash
-      @model.setting_values.inject({}) do |hash, sv|
+      setting_values.inject({}) do |hash, sv|
         hash[sv.key] = sv.value
         hash
       end.symbolize_keys

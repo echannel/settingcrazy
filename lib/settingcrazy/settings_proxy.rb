@@ -68,10 +68,14 @@ module SettingCrazy
 
     def inspect
       @model.reload unless @model.new_record?
+      self.to_hash.inspect
+    end
+
+    def to_hash
       @model.setting_values.inject({}) do |hash, sv|
         hash[sv.key] = sv.value
         hash
-      end.inspect
+      end.symbolize_keys
     end
 
     protected

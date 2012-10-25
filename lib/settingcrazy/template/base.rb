@@ -12,6 +12,10 @@ module SettingCrazy
           @enums ||= {}
         end
 
+        def enum_options(key)
+          enums[key].options
+        end
+
         # Returns an array suitable for use in options_for_select helper
         # Example:
         #

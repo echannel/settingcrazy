@@ -5,3 +5,6 @@
 * Serialize only for arrays (reject blanks too) - may need to add a serialize column
 * Template Validators
 * Template docs
+* More validations in validator
+ - an enum_value is only available if another enum_value matches certain criteria, e.g, delivery_method can be set to 'ACCELERATED' only if bid_setting is 'manualCPC'
+ - validates format, e.g daily_budget and initial_key_cpc can only be decimals

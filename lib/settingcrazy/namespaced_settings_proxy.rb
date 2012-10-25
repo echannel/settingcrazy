@@ -12,7 +12,7 @@ module SettingCrazy
       end
 
       def setting_values
-        @model.setting_values.namespace(@namespace.name)
+        @model.setting_values.select{ |sv| sv.namespace == @namespace.name }
       end
   end
 end

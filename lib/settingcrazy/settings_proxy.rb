@@ -92,7 +92,7 @@ module SettingCrazy
         if template.present? && !template.valid_option?(attribute)
           raise ActiveRecord::UnknownAttributeError
         end
-        setting_values.where(:key => attribute.to_s).first
+        setting_values.select{|sv| sv.key.to_sym == attribute.to_sym }.last # When updating an existing setting_value, the new value comes after the existing value in the array.
       end
 
       def build_value(key, value)

@@ -10,6 +10,7 @@ module SettingCrazy
     end
 
     def []=(key, value)
+      value.reject!(&:blank?) if value.respond_to?(:reject!)
       if @namespaces && namespace = @namespaces[key.to_sym]
         return NamespacedSettingsProxy.new(@model, namespace).bulk_assign(value)
       end

@@ -10,16 +10,16 @@ module SettingCrazy
     end
 
     def []=(key, value)
-      value.reject!(&:blank?) if value.respond_to?(:reject!)
       if @namespaces && namespace = @namespaces[key.to_sym]
         return NamespacedSettingsProxy.new(@model, namespace).bulk_assign(value)
       end
 
+      value.reject!(&:blank?) if value.respond_to?(:reject!)
       sv = setting_record(key)
       if sv.blank?
         build_value(key, value)
       else
-        sv.update_attribute(:value, value)
+        sv.value = value
       end
     end
 

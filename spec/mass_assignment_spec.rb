@@ -53,7 +53,7 @@ describe VendorInstance do
       before do
         model.attributes = {
           :settings => {
-            :google => { 
+            :google => {
               :foo => "some value",
               :wee => "another",
             }

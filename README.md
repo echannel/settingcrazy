@@ -108,20 +108,21 @@ The basic structure of an enum is:
       end
     end
 
-house = House.create(...)
-house.settings.bedroom_count => nil
-house.settings.bedroom_count = 1
-house.save!
+    house = House.create(...)
+    house.settings.bedroom_count => nil
+    house.settings.bedroom_count = 1
+    house.save!
 
 ####Validation
 
 Note: Validation does not work with namespaces yet.
+
 Settingcrazy always validates whether the value for an option is defined in the enums. There are a number of additional validation options available.
 
-multiple (boolean) - Whether it is valid to save more than one entry for a single key
-required (boolean) - Whether a value must be set for this enum
-dependent ({ enum_key: setting_value }) - A value may only be set for this option if all of the options it is dependent on are set to the specified values
-type (string) - Only current available value is 'text'. This causes settingcrazy to skip the range validation, so any value for this option will be valid.
+    multiple (boolean) - Whether it is valid to save more than one entry for a single key
+    required (boolean) - Whether a value must be set for this enum
+    dependent ({ enum_key: setting_value }) - A value may only be set for this option if all of the options it is dependent on are set to the specified values
+    type (string) - Only current available value is 'text'. This causes settingcrazy to skip the range validation, so any value for this option will be valid.
 
     class Settings::House < SettingCrazy::Template::Base
       enum :is_furnished, 'Furnished', { multiple: false, required: true } do
@@ -135,17 +136,17 @@ type (string) - Only current available value is 'text'. This causes settingcrazy
       end
     end
 
-house = House.create(...)
-house.valid? => false
-house.errors => { :is_furnished => ["Setting, 'Furnished', is required"] }
-house.settings.is_furnished = false
-house.valid? => true
-house.settings.has_dining_table = false
-house.valid? => false ("'Has Dining Table' can only be specified if 'Furnished' is set to 'Not Furnished'")
-house.settings.is_furnished = true
-house.valid? => true
-house.settings.has_dining_table = 3
-house.valid? => false ("'3' is not a valid setting for 'Has Dining Table'")
+    house = House.create(...)
+    house.valid? => false
+    house.errors => { :is_furnished => ["Setting, 'Furnished', is required"] }
+    house.settings.is_furnished = false
+    house.valid? => true
+    house.settings.has_dining_table = false
+    house.valid? => false ("'Has Dining Table' can only be specified if 'Furnished' is set to 'Not Furnished'")
+    house.settings.is_furnished = true
+    house.valid? => true
+    house.settings.has_dining_table = 3
+    house.valid? => false ("'3' is not a valid setting for 'Has Dining Table'")
 
 
 #####Defaults
@@ -162,13 +163,13 @@ Defaults enable both the ability to ensure the user starts with a valid object, 
       end
     end
 
-house = House.create(...)
-house.settings => {}
-house.settings.bedroom_count => 2
-house.settings.bedroom_count = 3
-house.settings => { :bedroom_count => 3 }
-house.is_furnished => false
-house.has_dining_table => nil
+    house = House.create(...)
+    house.settings => {}
+    house.settings.bedroom_count => 2
+    house.settings.bedroom_count = 3
+    house.settings => { :bedroom_count => 3 }
+    house.is_furnished => false
+    house.has_dining_table => nil
 
 ### Mass Assignment and Usage in Forms
 

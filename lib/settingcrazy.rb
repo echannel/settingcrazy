@@ -9,11 +9,13 @@ require "settingcrazy/class_methods"
 require "settingcrazy/instance_methods"
 require "settingcrazy/inheritor"
 require "settingcrazy/template"
+require "settingcrazy/settings_validator"
 
 module SettingCrazy
   def self.included(base)
     base.class_eval <<-EVAL
       has_many :setting_values, :class_name => "SettingCrazy::SettingValue", :as => :settable, :autosave => true
+      validates_with SettingsValidator
     EVAL
     base.extend ClassMethods
     base.send(:include, InstanceMethods)

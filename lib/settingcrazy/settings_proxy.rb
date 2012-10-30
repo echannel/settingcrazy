@@ -14,11 +14,12 @@ module SettingCrazy
         return NamespacedSettingsProxy.new(@model, namespace).bulk_assign(value)
       end
 
+      value.reject!(&:blank?) if value.respond_to?(:reject!)
       sv = setting_record(key)
       if sv.blank?
         build_value(key, value)
       else
-        sv.update_attribute(:value, value)
+        sv.value = value
       end
     end
 
@@ -68,10 +69,14 @@ module SettingCrazy
 
     def inspect
       @model.reload unless @model.new_record?
-      @model.setting_values.inject({}) do |hash, sv|
+      self.to_hash.inspect
+    end
+
+    def to_hash
+      setting_values.inject({}) do |hash, sv|
         hash[sv.key] = sv.value
         hash
-      end.inspect
+      end.symbolize_keys
     end
 
     protected
@@ -88,7 +93,7 @@ module SettingCrazy
         if template.present? && !template.valid_option?(attribute)
           raise ActiveRecord::UnknownAttributeError
         end
-        setting_values.where(:key => attribute.to_s).first
+        setting_values.select{|sv| sv.key.to_sym == attribute.to_sym }.last # When updating an existing setting_value, the new value comes after the existing value in the array.
       end
 
       def build_value(key, value)

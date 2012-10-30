@@ -5,11 +5,15 @@ module SettingCrazy
       class << self
 
         def enum(id, name=id.to_s, options={}, &block)
-          enums[id] = Scenario::Setting::Enum.new(name, options, &block)
+          enums[id] = SettingCrazy::Template::Enum.new(name, options, &block)
         end
 
         def enums
           @enums ||= {}
+        end
+
+        def enum_options(key)
+          enums[key].options
         end
 
         # Returns an array suitable for use in options_for_select helper

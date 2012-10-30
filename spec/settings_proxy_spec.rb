@@ -12,6 +12,7 @@ describe SettingCrazy::SettingsProxy do
       its(:oth) { should be(nil) }
       it        { subject[:foo].should == 'bar' }
       it        { subject[:oth].should be(nil) }
+      it        { subject.to_hash.should == {foo: 'bar'} }
 
       describe "update a value" do
         before { subject.foo = "different" }

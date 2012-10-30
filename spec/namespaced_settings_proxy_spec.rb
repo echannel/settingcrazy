@@ -1,9 +1,8 @@
 require 'spec_helper'
 
 describe SettingCrazy::NamespacedSettingsProxy do
-  let(:model) { VendorInstance.create(:name => "VI") }
-
   context "no template" do
+    let(:model) { VendorInstance.create(:name => "VI") }
     let(:namespace) { SettingCrazy::Namespace.new('google') }
     subject         { SettingCrazy::NamespacedSettingsProxy.new(model, namespace) }
 
@@ -38,6 +37,34 @@ describe SettingCrazy::NamespacedSettingsProxy do
         end
         its(:foo) { should == [ 'd', 'e', 'f' ] }
       end
+    end
+  end
+
+  describe 'one settable object with multiple namespaces' do
+    let(:scenario) { Scenario.create }
+    subject        { scenario.settings }
+
+    context 'not share setting_values' do
+      before do
+        scenario.settings.google.foo = 'bar'
+        scenario.save!
+      end
+      it { subject.google.inspect.should == '{:foo=>"bar"}' }
+      it { subject.google.foo.should     == 'bar' }
+      it { subject.yahoo.inspect.should  == '{}' }
+      it { subject.yahoo.foo.should      be(nil) }
+    end
+
+    context 'has unique values' do
+      before do
+        scenario.settings.google.foo = 'bar'
+        scenario.settings.yahoo.foo  = 'baz'
+        scenario.save!
+      end
+      it { subject.google.inspect.should == '{:foo=>"bar"}' }
+      it { subject.google.foo.should     == 'bar' }
+      it { subject.yahoo.inspect.should  == '{:foo=>"baz"}' }
+      it { subject.yahoo.foo.should      == 'baz' }
     end
   end
 end

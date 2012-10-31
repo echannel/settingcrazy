@@ -16,6 +16,7 @@ module SettingCrazy
     base.class_eval <<-EVAL
       has_many :setting_values, :class_name => "SettingCrazy::SettingValue", :as => :settable, :autosave => true
       validates_with SettingsValidator
+      attr_accessor :setting_errors
     EVAL
     base.extend ClassMethods
     base.send(:include, InstanceMethods)

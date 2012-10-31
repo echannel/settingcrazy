@@ -51,7 +51,7 @@ class SettingsValidator < ActiveModel::Validator
     def validate_range(key, value, enum_values)
       values = value.instance_of?(Array) ? value : [value]
       values.each do |v|
-        add_template_error(key, "'#{v}' is not a valid setting for '#{template.name_for(key)}'") unless enum_values.include?(v)
+        add_templated_error(key, "'#{v}' is not a valid setting for '#{template.name_for(key)}'") unless enum_values.include?(v)
       end
     end
 

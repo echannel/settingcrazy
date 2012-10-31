@@ -118,6 +118,34 @@ describe SettingsValidator do
           end
         end
       end
+
+      context 'validates required_if' do
+        before { subject.settings.required_key = 'true' }
+        context 'dependee key does not exist' do
+          before { subject.valid? }
+          it     { should be_valid }
+        end
+
+        context 'dependee key exists but is not required value' do
+          before { subject.settings.dependee_key = 'foo'; subject.valid? }
+          it     { should be_valid }
+        end
+
+        context 'dependee key exists and is required value' do
+          before { subject.settings.dependee_key = 'baz' }
+
+          context 'required_if_key does not exist' do
+            before { subject.valid? }
+            it     { should_not be_valid }
+            it     { subject.setting_errors['ExampleCampaignTemplate'][:required_if_key].should include("Setting, 'RequiredIfKey', is required when dependee_key are set to baz") }
+          end
+
+          context 'required_if_key exists' do
+            before { subject.settings.required_if_key = 'true'; subject.valid? }
+            it     { should be_valid }
+          end
+        end
+      end
     end
   end
 end

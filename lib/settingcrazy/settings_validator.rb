@@ -27,10 +27,11 @@ class SettingsValidator < ActiveModel::Validator
         enum_options  = template.enum_options(key)
         current_value = settings.send(key)
 
-        validate_presence(key, current_value)                            if enum_options[:required]
-        validate_singleness(key, current_value)                      unless enum_options[:multiple]
-        validate_dependent(key, current_value, enum_options[:dependent]) if enum_options[:dependent] && current_value.present?
-        validate_range(key, current_value, name_value_pairs.values)      if enum_options[:type] != 'text' && current_value.present?
+        validate_presence(key, current_value)                               if enum_options[:required]
+        validate_singleness(key, current_value)                         unless enum_options[:multiple]
+        validate_dependent(key, current_value, enum_options[:dependent])    if enum_options[:dependent] && current_value.present?
+        validate_range(key, current_value, name_value_pairs.values)         if enum_options[:type] != 'text' && current_value.present?
+        validate_require_if(key, current_value, enum_options[:required_if]) if enum_options[:required_if].present?
       end
     end
 
@@ -52,6 +53,12 @@ class SettingsValidator < ActiveModel::Validator
       values = value.instance_of?(Array) ? value : [value]
       values.each do |v|
         add_templated_error(key, "'#{v}' is not a valid setting for '#{template.name_for(key)}'") unless enum_values.include?(v)
+      end
+    end
+
+    def validate_require_if(key, value, conditions)
+      if conditions.all? { |k, v| settings.send(k) == v }
+        add_templated_error(key, "Setting, '#{template.name_for(key)}', is required when #{conditions.keys.join(',')} are set to #{conditions.values.join(',')}#{conditions.keys.count > 1 ? ' respectively' : ''}") if value.blank?
       end
     end
 

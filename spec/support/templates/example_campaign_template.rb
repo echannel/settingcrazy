@@ -16,9 +16,14 @@ class ExampleCampaignTemplate < SettingCrazy::Template::Base
   enum :dependee_key, 'DependeeKey' do
     value 'foo', 'DependeeKey is foo'
     value 'bar', 'DependeeKey is bar'
+    value 'baz', 'DependeeKey is baz'
   end
 
   enum :dependent_key, 'DependentKey', {dependent: {dependee_key: 'bar'}} do
     value 'BAR', 'DependentKey is BAR'
+  end
+
+  enum :required_if_key, 'RequiredIfKey', { required_if: {dependee_key: 'baz'} } do
+    value 'true', 'RequiredIfKey is true'
   end
 end

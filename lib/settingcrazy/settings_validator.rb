@@ -5,9 +5,6 @@ class SettingsValidator < ActiveModel::Validator
     record.setting_errors = nil
     self.record  = record
 
-    p "validating #{record.class}"
-
-
     if record.persisted? # Not to valid setting_values for unsaved owner
       if record.class._setting_namespaces
         record.class._setting_namespaces.each do |name, namespace|

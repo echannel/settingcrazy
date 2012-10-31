@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["daniel@codefire.com"]
   gem.description   = %q{An advanced setting manager for ActiveRecord models}
   gem.summary       = %q{An advanced setting manager for ActiveRecord models}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/echannel/settingcrazy"
 
   gem.add_development_dependency "rspec", "~> 2.11.0"
   gem.add_development_dependency "activerecord", "~> 3"

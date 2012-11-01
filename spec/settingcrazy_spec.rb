@@ -20,7 +20,7 @@ describe SettingCrazy do
       its(:google)  { should be_a(SettingCrazy::SettingsProxy) }
       its(:yahoo)   { should be_a(SettingCrazy::SettingsProxy) }
       its(:unknown) { should be_nil }
-      
+
       describe "setting and getting" do
         before do
           model.settings.google.foo = "bar"
@@ -47,10 +47,11 @@ describe SettingCrazy do
       it "should have a template for google" do
         subject.google.template.should == ExampleTemplate
       end
-      
+
       describe "setting and getting" do
         before do
           model.settings.google.foo = "bar"
+          model.settings.google.required_key = '1234'
           model.save!
         end
 

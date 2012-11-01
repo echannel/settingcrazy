@@ -148,4 +148,19 @@ describe SettingsValidator do
       end
     end
   end
+
+  context 'multiple namespaces' do
+    subject { TemplatedScenario.create(:name => "Scenario") }
+
+    context 'validates all namespaces' do
+      before { subject.valid? }
+      it     { subject.errors.messages[:base].should include('Settings are invalid') }
+      it     { subject.setting_errors['ExampleTemplate'][:required_key].should include("Setting, 'RequiredKey', is required") }
+    end
+
+    context 'validates available namespaces only' do
+      before { subject.stubs(:available_setting_namespaces).returns(subject.class._setting_namespaces.slice(:yahoo)) }
+      it     { should be_valid }
+    end
+  end
 end

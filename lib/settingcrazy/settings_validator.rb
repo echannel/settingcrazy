@@ -7,7 +7,8 @@ class SettingsValidator < ActiveModel::Validator
 
     if record.persisted? # Not to valid setting_values for unsaved owner
       if record.class._setting_namespaces
-        record.class._setting_namespaces.each do |name, namespace|
+        namespaces = record.respond_to?(:available_setting_namespaces) ? record.available_setting_namespaces : record.class._setting_namespaces
+        namespaces.each do |name, namespace|
           self.template = namespace.template
           self.settings = record.settings[name]
           validate_template if namespace.template

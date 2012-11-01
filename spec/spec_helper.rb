@@ -4,5 +4,5 @@ require 'support/templates'
 require 'support/models'
 
 RSpec.configure do |config|
-  # config.mock_with :rr
+  config.mock_with :mocha
 end

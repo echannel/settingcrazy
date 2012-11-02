@@ -59,9 +59,10 @@ module SettingCrazy
       @model.class._inheritor.parent_settings_for(@model)
     end
 
-    def each(&block)
-      setting_values.each(&block)
-    end
+    # Comment out this method to prevent draper thinks it as an Enumerator
+    # def each(&block)
+    #   setting_values.each(&block)
+    # end
 
     def map(&block)
       setting_values.map(&block)

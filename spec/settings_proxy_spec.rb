@@ -35,21 +35,40 @@ describe SettingCrazy::SettingsProxy do
         its(:foo) { should == [ 'd', 'e', 'f' ] }
       end
     end
+
+    context 'respond_to?' do
+      context 'key has not been set' do
+        it { subject.respond_to?(:foo).should be_false }
+      end
+
+      context 'key has been set' do
+        before { subject.foo = 'bar'; model.save! }
+        it     { subject.respond_to?(:foo).should be_true }
+      end
+    end
   end
 
   context "a template is provided" do
-    let(:template) { ExampleTemplate }
-    subject   { SettingCrazy::SettingsProxy.new(model, template) }
-    before    { subject.foo = "1234"; model.save! }
-    its(:foo) { should == "1234" }
-    its(:bar) { should == "A string default" }
-    it        { subject[:foo].should == "1234" }
-    it        { subject[:bar].should == "A string default" }
+    let(:model)        { TemplatedCampaign.create(:name => 'TC') }
+    subject            { model.settings }
+    before             { subject.required_key = 'true'; model.save! }
+    its(:required_key) { should == 'true' }
+    it                 { subject[:required_key].should == 'true' }
 
     it "should raise if we try to get an invalid option" do
       -> {
         subject.unknown
       }.should raise_error(ActiveRecord::UnknownAttributeError)
+    end
+
+    context 'respond_to?' do
+      context 'key is not in enums' do
+        it { subject.respond_to?(:undefined_key).should be_false }
+      end
+
+      context 'key is in enums' do
+        it { subject.respond_to?(:required_key).should be_true }
+      end
     end
   end
 end

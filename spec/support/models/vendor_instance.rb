@@ -3,7 +3,7 @@ ActiveRecord::Base.connection.create_table(:vendor_instances) do |t|
   t.string :name
 end
 
-class VendorInstance < ActiveRecord::Base  
+class VendorInstance < ActiveRecord::Base
   include SettingCrazy
   attr_accessible :name
 end

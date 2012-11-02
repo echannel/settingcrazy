@@ -1,6 +1,7 @@
 # Settingcrazy
 
-TODO: Write a gem description
+Similar to other settings gems, Settingcrazy allows you to set arbitrary settings to your ActiveRecord models.
+It also allows you inherit settings from parent objects, save namespaced settings, and use setting templates to specify possible setting keys and values, validations, and default values.
 
 ## Installation
 
@@ -69,7 +70,7 @@ Your settings can inherit from the settings of a parent.
 
 ### Setting Templates
 
-Available settings are specified through the use of setting templates. These tell settingcrazy the options that exist, and what possible values they can take.
+Available settings are specified through the use of setting templates. These tell settingcrazy the options that exist, and the possible values they can take.
 
     class House < ActiveRecord::Base
       include SettingCrazy
@@ -115,14 +116,15 @@ The basic structure of an enum is:
 
 ####Validation
 
-Note: Validation does not work with namespaces yet.
+Settings validation will only occur for a model that is using a template, or a namespaced template. When validating, Settingcrazy will always validate whether the value set for an option has been defined as a possible value for that option. As well as this automatic validation, there are a number of additional validation options that can be specified per enumeration.
 
-Settingcrazy always validates whether the value for an option is defined in the enums. There are a number of additional validation options available.
+    # multiple (boolean) - Whether it is valid to save more than one entry for a single key
+    # dependent ({ enum_key: setting_value }) - A value may only be set for this option if all of the options it is dependent on are set to the specified values
+    # required (boolean) - Whether a value must be set for this enum
+    # required_if ({ enum_key: setting_value }) - A value must be set for this option if all of the options it is dependent on are set to the specified values
+    # type (string) - Only current available value is 'text'. This causes settingcrazy to skip the range validation, so any value for this option will be valid.
 
-    multiple (boolean) - Whether it is valid to save more than one entry for a single key
-    required (boolean) - Whether a value must be set for this enum
-    dependent ({ enum_key: setting_value }) - A value may only be set for this option if all of the options it is dependent on are set to the specified values
-    type (string) - Only current available value is 'text'. This causes settingcrazy to skip the range validation, so any value for this option will be valid.
+Due to the ability to namespace settings (discussed later), the validation errors for each object are placed in the hash, setting_errors, for each model. If validation of settings fails, the object will still be flagged as invalid, but the details will need to be retrieved from setting_errors. To allow multiple templates to contain settings of the same name, validation errors for settings will be listed under the setting template's class name of the invalid setting(s).
 
     class Settings::House < SettingCrazy::Template::Base
       enum :is_furnished, 'Furnished', { multiple: false, required: true } do
@@ -138,7 +140,8 @@ Settingcrazy always validates whether the value for an option is defined in the 
 
     house = House.create(...)
     house.valid? => false
-    house.errors => { :is_furnished => ["Setting, 'Furnished', is required"] }
+    house.errors => { :base => ["Settings are invalid"] }
+    house.setting_errors => { 'Settings::House' => { :is_furnished => ["Setting, 'Furnished', is required"] } }
     house.settings.is_furnished = false
     house.valid? => true
     house.settings.has_dining_table = false

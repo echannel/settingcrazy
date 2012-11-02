@@ -73,13 +73,13 @@ describe SettingsValidator do
           context 'dependee value does not exist' do
             before { subject.settings.dependent_key = 'BAR'; subject.valid? }
             it     { should_not be_valid }
-            it     { subject.setting_errors['ExampleCampaignTemplate'][:dependent_key].should include("'DependentKey' can only be specified if 'DependeeKey' is set to 'bar'") }
+            it     { subject.setting_errors['ExampleCampaignTemplate'][:dependent_key].should include("'DependentKey' can only be specified if 'DependeeKey' is set to 'DependeeKey is bar'") }
           end
 
           context 'dependee value is not satisfied' do
             before { subject.settings = {dependee_key: 'foo', dependent_key: 'BAR'}; subject.valid? }
             it     { should_not be_valid }
-            it     { subject.setting_errors['ExampleCampaignTemplate'][:dependent_key].should include("'DependentKey' can only be specified if 'DependeeKey' is set to 'bar'") }
+            it     { subject.setting_errors['ExampleCampaignTemplate'][:dependent_key].should include("'DependentKey' can only be specified if 'DependeeKey' is set to 'DependeeKey is bar'") }
           end
 
           context 'dependee value is satisfied' do
@@ -137,7 +137,7 @@ describe SettingsValidator do
           context 'required_if_key does not exist' do
             before { subject.valid? }
             it     { should_not be_valid }
-            it     { subject.setting_errors['ExampleCampaignTemplate'][:required_if_key].should include("Setting, 'RequiredIfKey', is required when dependee_key are set to baz") }
+            it     { subject.setting_errors['ExampleCampaignTemplate'][:required_if_key].should include("Setting, 'RequiredIfKey', is required when 'DependeeKey' is 'DependeeKey is baz'") }
           end
 
           context 'required_if_key exists' do

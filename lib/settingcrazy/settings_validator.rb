@@ -72,7 +72,7 @@ class SettingsValidator < ActiveModel::Validator
 
     def conditions_to_sentence(conditions)
       conditions.inject([]) do |res, (condition_key, condition_value)|
-        res.push("#{template.name_for(condition_key)} is '#{human_readable_value_for(condition_key, condition_value)}'")
+        res.push("'#{template.name_for(condition_key)}' is '#{human_readable_value_for(condition_key, condition_value)}'")
         res
       end.to_sentence
     end

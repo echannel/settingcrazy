@@ -46,7 +46,7 @@ class SettingsValidator < ActiveModel::Validator
 
     def validate_dependent(key, value, conditions)
       conditions.each do |dependent_on_key, dependent_on_value|
-        add_templated_error(key, "'#{template.name_for(key)}' can only be specified if '#{template.name_for(dependent_on_key)}' is set to '#{human_readable_value_for(dependant_on_key, dependent_on_value)}'") unless settings.send(dependent_on_key) == dependent_on_value
+        add_templated_error(key, "'#{template.name_for(key)}' can only be specified if '#{template.name_for(dependent_on_key)}' is set to '#{human_readable_value_for(dependent_on_key, dependent_on_value)}'") unless settings.send(dependent_on_key) == dependent_on_value
       end
     end
 

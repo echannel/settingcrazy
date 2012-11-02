@@ -54,6 +54,15 @@ module SettingCrazy
       end
     end
 
+    def respond_to?(method_name)
+      method_name_getter = method_name.to_s.gsub(/=$/, '').to_sym
+      if template
+        super || template.enums.keys.include?(method_name_getter)  #quick, dirty fix
+      else
+        super || setting_values.map{ |sv| sv.key.to_sym }.uniq.include?(method_name_getter)
+      end
+    end
+
     def parent_settings
       return nil unless @model.class._inheritor.present?
       @model.class._inheritor.parent_settings_for(@model)

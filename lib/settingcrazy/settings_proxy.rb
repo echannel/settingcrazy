@@ -59,12 +59,13 @@ module SettingCrazy
       @model.class._inheritor.parent_settings_for(@model)
     end
 
-    def each(&block)
-      setting_values.each(&block)
-    end
-
-    def map(&block)
-      setting_values.map(&block)
+    # Use to enumerate the settings
+    # eg;
+    #
+    # model.settings.enumerator.each { |s| ... }
+    #
+    def enumerator
+      Enumerator.new(setting_values)
     end
 
     def inspect

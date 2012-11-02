@@ -46,7 +46,7 @@ class SettingsValidator < ActiveModel::Validator
 
     def validate_dependent(key, value, conditions)
       conditions.each do |dependent_on_key, dependent_on_value|
-        add_templated_error(key, "'#{template.name_for(key)}' can only be specified if '#{template.name_for(dependent_on_key)}' is set to '#{dependent_on_value}'") unless settings.send(dependent_on_key) == dependent_on_value
+        add_templated_error(key, "'#{template.name_for(key)}' can only be specified if '#{template.name_for(dependent_on_key)}' is set to '#{human_readable_value_for(dependant_on_key, dependent_on_value)}'") unless settings.send(dependent_on_key) == dependent_on_value
       end
     end
 
@@ -59,7 +59,7 @@ class SettingsValidator < ActiveModel::Validator
 
     def validate_require_if(key, value, conditions)
       if conditions.all? { |k, v| settings.send(k) == v }
-        add_templated_error(key, "Setting, '#{template.name_for(key)}', is required when #{conditions.keys.join(',')} are set to #{conditions.values.join(',')}#{conditions.keys.count > 1 ? ' respectively' : ''}") if value.blank?
+        add_templated_error(key, "Setting, '#{template.name_for(key)}', is required when #{conditions_to_sentence(conditions)}") if value.blank?
       end
     end
 
@@ -68,5 +68,16 @@ class SettingsValidator < ActiveModel::Validator
       record.setting_errors[template.to_s]      ||= {}
       record.setting_errors[template.to_s][key] ||= []
       record.setting_errors[template.to_s][key].push(message)
+    end
+
+    def conditions_to_sentence(conditions)
+      conditions.inject([]) do |res, (condition_key, condition_value)|
+        res.push("#{template.name_for(condition_key)} is '#{human_readable_value_for(condition_key, condition_value)}'")
+        res
+      end.to_sentence
+    end
+
+    def human_readable_value_for(enum_key, value)
+      template.enums[enum_key].key(value)
     end
 end

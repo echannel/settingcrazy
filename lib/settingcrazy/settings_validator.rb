@@ -33,6 +33,7 @@ class SettingsValidator < ActiveModel::Validator
         validate_dependent(key, current_value, enum_options[:dependent])    if enum_options[:dependent] && current_value.present?
         validate_range(key, current_value, name_value_pairs.values)         if enum_options[:type] != 'text' && current_value.present?
         validate_require_if(key, current_value, enum_options[:required_if]) if enum_options[:required_if].present?
+        validate_text_field(key, current_value, enum_options)               if enum_options[:type] == 'text' && current_value.present?
       end
     end
 
@@ -60,6 +61,12 @@ class SettingsValidator < ActiveModel::Validator
     def validate_require_if(key, value, conditions)
       if conditions.all? { |k, v| settings.send(k) == v }
         add_templated_error(key, "Setting, '#{template.name_for(key)}', is required when #{conditions_to_sentence(conditions)}") if value.blank?
+      end
+    end
+
+    def validate_text_field(key, value, conditions)
+      if conditions[:greater_than].present?
+        add_templated_error(key, "Setting, '#{template.name_for(key)}', must be greater than #{conditions[:greater_than]}") unless value.to_f > conditions[:greater_than].to_f
       end
     end
 

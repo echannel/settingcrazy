@@ -146,6 +146,27 @@ describe SettingsValidator do
           end
         end
       end
+
+      context 'validates greater_than' do
+        before { subject.settings.required_key = 'true' }
+        context 'for a setting that does not satisfy the requirements' do
+          before  do
+            subject.settings.greater_than_key = 0
+            subject.valid?
+          end
+
+          it      { should_not be_valid }
+          it      { subject.setting_errors['ExampleCampaignTemplate'][:greater_than_key].should include("Setting, 'GreaterThanKey', must be greater than 0") }
+        end
+
+        context 'for a setting that satisfies the requirements' do
+          before  do
+            subject.settings.greater_than_key = 1
+            subject.valid?
+          end
+          it      { should be_valid }
+        end
+      end
     end
   end
 

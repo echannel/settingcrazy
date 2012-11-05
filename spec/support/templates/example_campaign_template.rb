@@ -26,4 +26,8 @@ class ExampleCampaignTemplate < SettingCrazy::Template::Base
   enum :required_if_key, 'RequiredIfKey', { required_if: {dependee_key: 'baz'} } do
     value 'true', 'RequiredIfKey is true'
   end
+
+  enum :greater_than_key, 'GreaterThanKey', { type: 'text', greater_than: 0 } do
+    value '', 'GreaterThanKey text value'
+  end
 end

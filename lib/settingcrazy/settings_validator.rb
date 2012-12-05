@@ -5,7 +5,7 @@ class SettingsValidator < ActiveModel::Validator
     record.setting_errors = nil
     self.record  = record
 
-    if record.persisted? # Not to valid setting_values for unsaved owner
+    if record.persisted? # Do not validate setting_values for unsaved owner
       if record.class._setting_namespaces
         namespaces = record.respond_to?(:available_setting_namespaces) ? record.available_setting_namespaces : record.class._setting_namespaces
         namespaces.each do |name, namespace|
@@ -65,8 +65,23 @@ class SettingsValidator < ActiveModel::Validator
     end
 
     def validate_text_field(key, value, conditions)
+      # TODO: Handle gte, lt, lte comparison
       if conditions[:greater_than].present?
-        add_templated_error(key, "Setting, '#{template.name_for(key)}', must be greater than #{conditions[:greater_than]}") unless value.to_f > conditions[:greater_than].to_f
+        if conditions[:greater_than][:value].present? # Checking value against a static value
+          add_templated_error(key, "Setting, '#{template.name_for(key)}', must be greater than #{conditions[:greater_than][:value]}") unless value.to_f > conditions[:greater_than][:value].to_f
+        elsif conditions[:greater_than][:association].present?  # Checking value against an attribute of a model associated with this record
+          # Fetch comparison value from associated record, inherited and namespaced if required
+          namespace = record.settings.inherited_namespace
+          comparison = namespace ?
+            record.send(conditions[:greater_than][:association]).settings.send(namespace).send(conditions[:greater_than][:attribute]).to_f :
+            record.send(conditions[:greater_than][:association]).settings.send(conditions[:greater_than][:attribute]).to_f
+          unless value.to_f > comparison
+            add_templated_error(key, "Setting, '#{template.name_for(key)}', must be greater than the '#{template.name_for(conditions[:greater_than][:attribute])}' of its #{(conditions[:greater_than][:association]).to_s.titleize}")
+          end
+        elsif conditions[:greater_than][:attribute].present?  # Checking value against another setting attribute of this record
+          add_templated_error(key, "Setting, '#{template.name_for(key)}', must be greater than '#{template.name_for(conditions[:greater_than][:attribute])}'") unless value.to_f > record.settings.send(conditions[:greater_than][:attribute])
+        end
+
       end
     end
 

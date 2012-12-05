@@ -18,14 +18,13 @@ module SettingCrazy
       end
     end
 
-    protected
-      def parent_namespace(model)
-        case @parent_namespace
-          when nil then nil
-          when String, Symbol then @parent_namespace
-          when Proc
-            @parent_namespace.call(model)
-        end
+    def parent_namespace(model)
+      case @parent_namespace
+        when nil then nil
+        when String, Symbol then @parent_namespace
+        when Proc
+          @parent_namespace.call(model)
       end
+    end
   end
 end

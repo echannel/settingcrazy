@@ -27,7 +27,15 @@ class ExampleCampaignTemplate < SettingCrazy::Template::Base
     value 'true', 'RequiredIfKey is true'
   end
 
-  enum :greater_than_key, 'GreaterThanKey', { type: 'text', greater_than: 0 } do
-    value '', 'GreaterThanKey text value'
+  enum :greater_than_value_key, 'GreaterThanValueKey', { type: 'text', greater_than: { value: 0 } } do
+    value '', 'GreaterThanValueKey text value'
+  end
+
+  enum :greater_than_attribute_key, 'GreaterThanAttributeKey', { type: 'text', greater_than: { attribute: :greater_than_value_key } } do
+    value '', 'GreaterThanValueKey text value'
+  end
+
+  enum :greater_than_association_attribute_key, 'GreaterThanAssociationAttributeKey', { type: 'text', greater_than: { association: :scenario, attribute: :greater_than_value_key } } do
+    value '', 'GreaterThanAssociationAttributeKey text value'
   end
 end

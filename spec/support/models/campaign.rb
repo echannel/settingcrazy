@@ -4,7 +4,7 @@ ActiveRecord::Base.connection.create_table(:campaigns) do |t|
   t.references :scenario
 end
 
-class Campaign < ActiveRecord::Base  
+class Campaign < ActiveRecord::Base
   include SettingCrazy
   belongs_to :scenario
   attr_accessible :name

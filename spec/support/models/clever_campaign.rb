@@ -5,7 +5,7 @@ ActiveRecord::Base.connection.create_table(:clever_campaigns) do |t|
   t.references :scenario
 end
 
-class CleverCampaign < ActiveRecord::Base  
+class CleverCampaign < ActiveRecord::Base
   include SettingCrazy
   belongs_to :scenario
   attr_accessible :name, :setting_namespace

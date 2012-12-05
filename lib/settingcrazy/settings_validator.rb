@@ -1,16 +1,6 @@
 class SettingsValidator < ActiveModel::Validator
   attr_accessor :record, :settings, :template
 
-  # TODO: Put these somewhere better
-  OPERATORS = {
-    greater_than: '>',
-    greater_than_or_equal_to: '>=',
-    less_than: '<',
-    less_than_or_equal_to: '<=',
-    equal_to: '==',
-    not_equal_to: '!='
-  }
-
   def validate(record)
     record.setting_errors = nil
     self.record  = record

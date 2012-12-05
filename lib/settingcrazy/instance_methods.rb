@@ -16,13 +16,5 @@ module SettingCrazy
     def settings=(attributes)
       settings.bulk_assign(attributes)
     end
-
-    def inherited_namespace
-      if self.class._inheritor.present?
-        self.respond_to?(:setting_namespace) ? self.setting_namespace : self.class._inheritor._parent_namespace
-      else
-
-      end
-    end
   end
 end

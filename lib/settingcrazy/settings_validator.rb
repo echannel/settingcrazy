@@ -66,23 +66,33 @@ class SettingsValidator < ActiveModel::Validator
 
     def validate_text_field(key, value, conditions)
       comparison_operations = conditions.keys & OPERATORS.keys
+      validate_numeric(key, value, conditions, comparison_operations) if comparison_operations
+    end
+
+    # Called by validate_text_field if any numeric operations are found
+    def validate_numeric(key, value, conditions, comparison_operations)
       comparison_operations.each do |comparison_operation|
         comparison_text = comparison_operation.to_s.gsub('_', ' ')
         operator = OPERATORS[comparison_operation]
+
         if conditions[comparison_operation][:value].present? # Checking value against a static value
           add_templated_error(key, "Setting, '#{template.name_for(key)}', must be #{comparison_text} #{conditions[comparison_operation][:value]}") unless value.to_f.send(operator, conditions[comparison_operation][:value].to_f)
         elsif conditions[comparison_operation][:association].present?  # Checking value against an attribute of a model associated with this record
-          # Fetch comparison value from associated record, inherited and namespaced if required
-          namespace = record.settings.inherited_namespace
-          comparison = namespace ?
-            record.send(conditions[comparison_operation][:association]).settings.send(namespace).send(conditions[comparison_operation][:attribute]).to_f :
-            record.send(conditions[comparison_operation][:association]).settings.send(conditions[comparison_operation][:attribute]).to_f
-          unless value.to_f.send(operator, comparison)
-            add_templated_error(key, "Setting, '#{template.name_for(key)}', must be #{comparison_text} the '#{template.name_for(conditions[comparison_operation][:attribute])}' of its #{(conditions[comparison_operation][:association]).to_s.titleize}")
-          end
+          compare_with_association(key, value, conditions, comparison_operation, comparison_text, operator)
         elsif conditions[comparison_operation][:attribute].present?  # Checking value against another setting attribute of this record
           add_templated_error(key, "Setting, '#{template.name_for(key)}', must be #{comparison_text} '#{template.name_for(conditions[comparison_operation][:attribute])}'") unless value.to_f.send(operator, record.settings.send(conditions[comparison_operation][:attribute]))
         end
+      end
+    end
+
+    # Compare numerical value against setting of associated record
+    def compare_with_association(key, value, conditions, comparison_operation, comparison_text, operator)
+      namespace = record.settings.inherited_namespace # Fetch comparison value from associated record, inherited and namespaced if required
+      comparison = namespace ?
+        record.send(conditions[comparison_operation][:association]).settings.send(namespace).send(conditions[comparison_operation][:attribute]).to_f :
+        record.send(conditions[comparison_operation][:association]).settings.send(conditions[comparison_operation][:attribute]).to_f
+      unless value.to_f.send(operator, comparison)
+        add_templated_error(key, "Setting, '#{template.name_for(key)}', must be #{comparison_text} the '#{template.name_for(conditions[comparison_operation][:attribute])}' of its #{(conditions[comparison_operation][:association]).to_s.titleize}")
       end
     end
 

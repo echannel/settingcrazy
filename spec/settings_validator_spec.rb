@@ -206,7 +206,7 @@ describe SettingsValidator do
                   subject.valid?
                 end
                 it      { should_not be_valid }
-                it      { subject.setting_errors['ExampleCampaignTemplate'][:greater_than_association_attribute_key].should include("Setting, 'GreaterThanAssociationAttributeKey', must be greater than the 'GreaterThanValueKey' of its Scenario") }
+                it      { subject.setting_errors['ExampleCampaignTemplate'][:greater_than_association_attribute_key].should include("Setting, 'GreaterThanAssociationAttributeKey', must be greater than the 'Greater Than Value Key' of its Scenario") }
               end
 
               context 'for a setting that does satisfy the requirements' do
@@ -232,7 +232,7 @@ describe SettingsValidator do
                     subject.valid?
                   end
                   it      { should_not be_valid }
-                  it      { subject.setting_errors['ExampleCampaignTemplate'][:greater_than_association_attribute_key].should include("Setting, 'GreaterThanAssociationAttributeKey', must be greater than the 'GreaterThanValueKey' of its Scenario") }
+                  it      { subject.setting_errors['ExampleCampaignTemplate'][:greater_than_association_attribute_key].should include("Setting, 'GreaterThanAssociationAttributeKey', must be greater than the 'Greater Than Value Key' of its Scenario") }
                 end
 
                 context 'for a setting that does NOT satisfy the requirements' do
@@ -304,7 +304,7 @@ describe SettingsValidator do
                   subject.valid?
                 end
                 it      { should_not be_valid }
-                it      { subject.setting_errors['ExampleCampaignTemplate'][:less_than_association_attribute_key].should include("Setting, 'LessThanAssociationAttributeKey', must be less than the 'GreaterThanValueKey' of its Scenario") }
+                it      { subject.setting_errors['ExampleCampaignTemplate'][:less_than_association_attribute_key].should include("Setting, 'LessThanAssociationAttributeKey', must be less than the 'Greater Than Value Key' of its Scenario") }
               end
 
               context 'for a setting that does satisfy the requirements' do
@@ -330,7 +330,7 @@ describe SettingsValidator do
                     subject.valid?
                   end
                   it      { should_not be_valid }
-                  it      { subject.setting_errors['ExampleCampaignTemplate'][:less_than_association_attribute_key].should include("Setting, 'LessThanAssociationAttributeKey', must be less than the 'GreaterThanValueKey' of its Scenario") }
+                  it      { subject.setting_errors['ExampleCampaignTemplate'][:less_than_association_attribute_key].should include("Setting, 'LessThanAssociationAttributeKey', must be less than the 'Greater Than Value Key' of its Scenario") }
                 end
 
                 context 'for a setting that does NOT satisfy the requirements' do

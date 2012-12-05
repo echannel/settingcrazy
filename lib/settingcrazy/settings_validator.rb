@@ -1,6 +1,16 @@
 class SettingsValidator < ActiveModel::Validator
   attr_accessor :record, :settings, :template
 
+  # TODO: Put these somewhere better
+  OPERATORS = {
+    greater_than: '>',
+    greater_than_or_equal_to: '>=',
+    less_than: '<',
+    less_than_or_equal_to: '<=',
+    equal_to: '==',
+    not_equal_to: '!='
+  }
+
   def validate(record)
     record.setting_errors = nil
     self.record  = record
@@ -65,23 +75,24 @@ class SettingsValidator < ActiveModel::Validator
     end
 
     def validate_text_field(key, value, conditions)
-      # TODO: Handle gte, lt, lte comparison
-      if conditions[:greater_than].present?
-        if conditions[:greater_than][:value].present? # Checking value against a static value
-          add_templated_error(key, "Setting, '#{template.name_for(key)}', must be greater than #{conditions[:greater_than][:value]}") unless value.to_f > conditions[:greater_than][:value].to_f
-        elsif conditions[:greater_than][:association].present?  # Checking value against an attribute of a model associated with this record
+      comparison_operations = conditions.keys & OPERATORS.keys
+      comparison_operations.each do |comparison_operation|
+        comparison_text = comparison_operation.to_s.gsub('_', ' ')
+        operator = OPERATORS[comparison_operation]
+        if conditions[comparison_operation][:value].present? # Checking value against a static value
+          add_templated_error(key, "Setting, '#{template.name_for(key)}', must be #{comparison_text} #{conditions[comparison_operation][:value]}") unless value.to_f.send(operator, conditions[comparison_operation][:value].to_f)
+        elsif conditions[comparison_operation][:association].present?  # Checking value against an attribute of a model associated with this record
           # Fetch comparison value from associated record, inherited and namespaced if required
           namespace = record.settings.inherited_namespace
           comparison = namespace ?
-            record.send(conditions[:greater_than][:association]).settings.send(namespace).send(conditions[:greater_than][:attribute]).to_f :
-            record.send(conditions[:greater_than][:association]).settings.send(conditions[:greater_than][:attribute]).to_f
-          unless value.to_f > comparison
-            add_templated_error(key, "Setting, '#{template.name_for(key)}', must be greater than the '#{template.name_for(conditions[:greater_than][:attribute])}' of its #{(conditions[:greater_than][:association]).to_s.titleize}")
+            record.send(conditions[comparison_operation][:association]).settings.send(namespace).send(conditions[comparison_operation][:attribute]).to_f :
+            record.send(conditions[comparison_operation][:association]).settings.send(conditions[comparison_operation][:attribute]).to_f
+          unless value.to_f.send(operator, comparison)
+            add_templated_error(key, "Setting, '#{template.name_for(key)}', must be #{comparison_text} the '#{template.name_for(conditions[comparison_operation][:attribute])}' of its #{(conditions[comparison_operation][:association]).to_s.titleize}")
           end
-        elsif conditions[:greater_than][:attribute].present?  # Checking value against another setting attribute of this record
-          add_templated_error(key, "Setting, '#{template.name_for(key)}', must be greater than '#{template.name_for(conditions[:greater_than][:attribute])}'") unless value.to_f > record.settings.send(conditions[:greater_than][:attribute])
+        elsif conditions[comparison_operation][:attribute].present?  # Checking value against another setting attribute of this record
+          add_templated_error(key, "Setting, '#{template.name_for(key)}', must be #{comparison_text} '#{template.name_for(conditions[comparison_operation][:attribute])}'") unless value.to_f.send(operator, record.settings.send(conditions[comparison_operation][:attribute]))
         end
-
       end
     end
 

@@ -247,6 +247,104 @@ describe SettingsValidator do
             end
           end
         end
+
+        context 'validates less_than' do
+          context 'of a static value' do
+            context 'for a setting that does not satisfy the requirements' do
+              before  do
+                subject.settings.less_than_value_key = 0
+                subject.valid?
+              end
+
+              it      { should_not be_valid }
+              it      { subject.setting_errors['ExampleCampaignTemplate'][:less_than_value_key].should include("Setting, 'LessThanValueKey', must be less than 0") }
+            end
+
+            context 'for a setting that satisfies the requirements' do
+              before  do
+                subject.settings.less_than_value_key = -1
+                subject.valid?
+              end
+              it      { should be_valid }
+            end
+          end
+
+          context 'of an attribute of the same record' do
+            context 'for a setting that does NOT satisfy the requirements' do
+              before do
+                subject.settings.greater_than_value_key = 1
+                subject.settings.less_than_attribute_key = 1;
+                subject.valid?
+              end
+              it      { should_not be_valid }
+              it      { subject.setting_errors['ExampleCampaignTemplate'][:less_than_attribute_key].should include("Setting, 'LessThanAttributeKey', must be less than 'GreaterThanValueKey'") }
+            end
+
+            context 'for a setting that does satisfy the requirements' do
+              before do
+                subject.settings.greater_than_value_key = 1
+                subject.settings.less_than_attribute_key = 0;
+                subject.valid?
+              end
+              it      { should be_valid }
+            end
+          end
+
+          context 'of an attrubute of an associated record' do
+            let(:scenario) { Scenario.new(name: 'Test Scenario') }
+
+            context 'without any namespace' do
+              before do
+                scenario.settings.greater_than_value_key = 1
+                subject.scenario = scenario
+              end
+              context 'for a setting that does NOT satisfy the requirements' do
+                before do
+                  subject.settings.less_than_association_attribute_key = scenario.settings.greater_than_value_key + 1
+                  subject.valid?
+                end
+                it      { should_not be_valid }
+                it      { subject.setting_errors['ExampleCampaignTemplate'][:less_than_association_attribute_key].should include("Setting, 'LessThanAssociationAttributeKey', must be less than the 'GreaterThanValueKey' of its Scenario") }
+              end
+
+              context 'for a setting that does satisfy the requirements' do
+                before do
+                  subject.settings.less_than_association_attribute_key = scenario.settings.greater_than_value_key - 1
+                end
+                it { should be_valid }
+              end
+            end
+
+            context 'with a namespace' do
+              subject { TemplatedNamespacedCampaign.create(name: 'TemplatedNamespacedCampaign') }
+              before do
+                scenario.settings.google.greater_than_value_key = 3
+                scenario.settings.yahoo.greater_than_value_key = scenario.settings.google.greater_than_value_key + 2  # Setting in a namespace not inherited by campaign ensures setting is being validated against correct setting
+                subject.scenario = scenario
+              end
+
+              context 'inheriting settings by namespace' do
+                context 'for a setting that does NOT satisfy the requirements' do
+                  before do
+                    subject.settings.less_than_association_attribute_key = scenario.settings.google.greater_than_value_key + 1
+                    subject.valid?
+                  end
+                  it      { should_not be_valid }
+                  it      { subject.setting_errors['ExampleCampaignTemplate'][:less_than_association_attribute_key].should include("Setting, 'LessThanAssociationAttributeKey', must be less than the 'GreaterThanValueKey' of its Scenario") }
+                end
+
+                context 'for a setting that does NOT satisfy the requirements' do
+                  before do
+                    subject.settings.less_than_association_attribute_key = scenario.settings.google.greater_than_value_key - 1
+                    subject.valid?
+                  end
+                  it      { should be_valid }
+                end
+              end
+            end
+          end
+        end
+
       end
     end
   end

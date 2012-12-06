@@ -91,7 +91,7 @@ use_setting_template can also be passed a block, in case your model needs to use
       end
     end
 
-####Enums
+#### Enums
 
 The template itself is a collection of enums. Any attempt to get or set a setting that is not defined in a template will result in an ActiveRecord::UnknownAttributeError.
 The basic structure of an enum is:
@@ -114,7 +114,7 @@ The basic structure of an enum is:
     house.settings.bedroom_count = 1
     house.save!
 
-####Validation
+#### Validation
 
 Settings validation will only occur for a model that is using a template, or a namespaced template. When validating, Settingcrazy will always validate whether the value set for an option has been defined as a possible value for that option. As well as this automatic validation, there are a number of additional validation options that can be specified per enumeration.
 
@@ -123,6 +123,7 @@ Settings validation will only occur for a model that is using a template, or a n
     # required (boolean) - Whether a value must be set for this enum
     # required_if ({ enum_key: setting_value }) - A value must be set for this option if all of the options it is dependent on are set to the specified values
     # type (string) - Only current available value is 'text'. This causes settingcrazy to skip the range validation, so any value for this option will be valid.
+    # greater_than|greater_than_or_equal_to|less_than|less_than_or_equal_to|equal_to|not_equal_to ({ value: number } | { attribute: :attribute_name } | { attribute: :attribute_name, association: :association_name })
 
 Due to the ability to namespace settings (discussed later), the validation errors for each object are placed in the hash, setting_errors, for each model. If validation of settings fails, the object will still be flagged as invalid, but the details will need to be retrieved from setting_errors. To allow multiple templates to contain settings of the same name, validation errors for settings will be listed under the setting template's class name of the invalid setting(s).
 
@@ -152,7 +153,7 @@ Due to the ability to namespace settings (discussed later), the validation error
     house.valid? => false ("'3' is not a valid setting for 'Has Dining Table'")
 
 
-#####Defaults
+##### Defaults
 
 Defaults enable both the ability to ensure the user starts with a valid object, and  that the most common values are set on creation. To define defaults, create a class method in your template that returns a hash of default settings.
 
@@ -173,6 +174,33 @@ Defaults enable both the ability to ensure the user starts with a valid object, 
     house.settings => { :bedroom_count => 3 }
     house.is_furnished => false
     house.has_dining_table => nil
+
+##### Numerical Validation
+As shown above, a number of mathematical operators are available for numerical validation. These allow comparison with a static value, as well as with other settings of the current instance, and finally with settings of associated instance.
+
+    class Settings::House < SettingCrazy::Template::Base
+      enum :window_count, 'Number of Windows', { type: 'text', greater_than: { value: 0 } } do
+        value '', 'Number of Windows text value'
+      end
+    end
+
+    class Settings::Room < SettingCrazy::Template::Base
+      enum :window_count, 'Number of Windows', { type: 'text', less_than_or_equal_to: { association: :house, attribute: :window_count } } do
+        value '', 'Number of Windows text value'
+      end
+    end
+
+    house = House.create(...)
+    room = house.rooms.create(...)
+    house.settings.window_count => 0
+    house.valid? => false
+    house.setting_errors => {'Settings::House' => { :window_count => ["Setting, 'Number of Windows' must be greater than 0" ] } }
+    house.settings.window_count = 2
+    room.settings.window_count = 3
+    room.valid? => false
+    room.setting_errors => {'Settings::Room' => { :window_count => ["Setting, 'Number of Windows' must be less than or equal to the 'Number of Windows' of its House."] }}
+
+When validating against an association whose settings are namespaced, the current instance must inherit these settings from the association, with the namespace passed to the 'settings_inherit_via' method.
 
 ### Mass Assignment and Usage in Forms
 

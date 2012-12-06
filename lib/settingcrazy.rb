@@ -9,6 +9,7 @@ require "settingcrazy/class_methods"
 require "settingcrazy/instance_methods"
 require "settingcrazy/inheritor"
 require "settingcrazy/template"
+require "settingcrazy/constants"
 require "settingcrazy/settings_validator"
 
 module SettingCrazy

@@ -89,6 +89,10 @@ module SettingCrazy
       end.symbolize_keys
     end
 
+    def inherited_namespace
+      @model.class._inheritor.try(:parent_namespace, @model)
+    end
+
     protected
       def template_default_value(key)
         template.present? ? template.defaults[key] : nil

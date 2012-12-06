@@ -108,7 +108,7 @@ class SettingsValidator < ActiveModel::Validator
         # Checking value against another setting attribute of this record
         elsif conditions[comparison_operation][:attribute].present?
           attribute_for_comparison = conditions[comparison_operation][:attribute]
-          unless value.to_f.send(operator, record.settings.send(attribute_for_comparison))
+          unless value.to_f.send(operator, record.settings.send(attribute_for_comparison).to_f)
             add_templated_error(key, "Setting, '#{template.name_for(key)}', must be #{comparison_text} '#{template.name_for(attribute_for_comparison)}'")
           end
         end

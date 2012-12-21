@@ -192,7 +192,7 @@ describe SettingsValidator do
             end
           end
 
-          context 'of an attrubute of an associated record' do
+          context 'of an attribute of an associated record' do
             let(:scenario) { Scenario.new(name: 'Test Scenario') }
 
             context 'without any namespace' do
@@ -200,6 +200,7 @@ describe SettingsValidator do
                 scenario.settings.greater_than_value_key = 1
                 subject.scenario = scenario
               end
+
               context 'for a setting that does NOT satisfy the requirements' do
                 before do
                   subject.settings.greater_than_association_attribute_key = 1

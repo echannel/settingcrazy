@@ -172,27 +172,60 @@ describe SettingsValidator do
           end
 
           context 'of an attribute of the same record' do
-            context 'for a setting that does NOT satisfy the requirements' do
-              before do
-                subject.settings.greater_than_value_key = 1
-                subject.settings.greater_than_attribute_key = 1;
-                subject.valid?
+            context 'without any namespace' do
+              context 'for a setting that does NOT satisfy the requirements' do
+                before do
+                  subject.settings.greater_than_value_key = 1
+                  subject.settings.greater_than_attribute_key = 1;
+                  subject.valid?
+                end
+                it      { should_not be_valid }
+                it      { subject.setting_errors['ExampleCampaignTemplate'][:greater_than_attribute_key].should include("Setting, 'GreaterThanAttributeKey', must be greater than 'GreaterThanValueKey'") }
               end
-              it      { should_not be_valid }
-              it      { subject.setting_errors['ExampleCampaignTemplate'][:greater_than_attribute_key].should include("Setting, 'GreaterThanAttributeKey', must be greater than 'GreaterThanValueKey'") }
+
+              context 'for a setting that does satisfy the requirements' do
+                before do
+                  subject.settings.greater_than_value_key = 1
+                  subject.settings.greater_than_attribute_key = 2;
+                  subject.valid?
+                end
+                it      { should be_valid }
+              end
             end
 
-            context 'for a setting that does satisfy the requirements' do
-              before do
-                subject.settings.greater_than_value_key = 1
-                subject.settings.greater_than_attribute_key = 2;
-                subject.valid?
+            context 'with a namespace' do
+              subject { TemplatedScenario.create(name: 'TemplatedScenario') }
+
+              context 'for a setting that does NOT satisfy the requirements' do
+                before do
+                  subject.settings.google.required_key = 'a'
+                  subject.settings.yahoo.required_key = 'a'
+                  subject.settings.google.daily_budget = 100
+                  subject.settings.google.cpc = 200
+                  subject.settings.yahoo.daily_budget = 400
+                  subject.settings.yahoo.cpc = 50
+                  subject.valid?
+                end
+                it      { should_not be_valid }
+                it      { subject.setting_errors['ExampleTemplate'][:cpc].should include("Setting, 'Cost per Click', must be less than or equal to 'Daily Budget'") }
               end
-              it      { should be_valid }
+
+              context 'for a setting that does satisfy the requirements' do
+                before do
+                  subject.settings.google.required_key = 'a'
+                  subject.settings.yahoo.required_key = 'a'
+                  subject.settings.google.daily_budget = 100
+                  subject.settings.google.cpc = 20
+                  subject.settings.yahoo.daily_budget = 10
+                  subject.settings.yahoo.cpc = 1
+                  subject.valid?
+                end
+                it      { should be_valid }
+              end
             end
           end
 
-          context 'of an attrubute of an associated record' do
+          context 'of an attribute of an associated record' do
             let(:scenario) { Scenario.new(name: 'Test Scenario') }
 
             context 'without any namespace' do
@@ -200,6 +233,7 @@ describe SettingsValidator do
                 scenario.settings.greater_than_value_key = 1
                 subject.scenario = scenario
               end
+
               context 'for a setting that does NOT satisfy the requirements' do
                 before do
                   subject.settings.greater_than_association_attribute_key = 1
@@ -359,7 +393,11 @@ describe SettingsValidator do
     end
 
     context 'validates available namespaces only' do
-      before { subject.stubs(:available_setting_namespaces).returns(subject.class._setting_namespaces.slice(:yahoo)) }
+      before do
+        subject.stubs(:available_setting_namespaces).returns(subject.class._setting_namespaces.slice(:yahoo))
+        subject.settings.yahoo.required_key = 'a'
+      end
+
       it     { should be_valid }
     end
   end

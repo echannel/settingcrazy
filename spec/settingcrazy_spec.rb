@@ -52,6 +52,9 @@ describe SettingCrazy do
         before do
           model.settings.google.foo = "bar"
           model.settings.google.required_key = '1234'
+          model.settings.yahoo.required_key = '1234'
+          model.valid?
+          p model.setting_errors
           model.save!
         end
 
@@ -59,7 +62,7 @@ describe SettingCrazy do
         its(:foo) { should == 'bar' }
 
         it "should not be set in other namespaces" do
-          model.settings.yahoo.foo.should be_nil
+          model.settings.yahoo.foo.should_not == 'bar'
         end
 
         it "should not allow settings not in the templated namespace" do

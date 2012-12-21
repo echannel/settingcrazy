@@ -7,5 +7,5 @@ class TemplatedScenario < ActiveRecord::Base
   include SettingCrazy
   attr_accessible :name
   setting_namespace :google, :template => ExampleTemplate
-  setting_namespace :yahoo, :template => ExampleTemplate
+  setting_namespace :yahoo
 end

@@ -194,7 +194,7 @@ describe SettingsValidator do
             end
 
             context 'with a namespace' do
-              subject { TemplatedScenario.create(name: 'TemplatedScenario') }
+              subject { FullyTemplatedScenario.create(name: 'TemplatedScenario') }
 
               context 'for a setting that does NOT satisfy the requirements' do
                 before do
@@ -395,7 +395,6 @@ describe SettingsValidator do
     context 'validates available namespaces only' do
       before do
         subject.stubs(:available_setting_namespaces).returns(subject.class._setting_namespaces.slice(:yahoo))
-        subject.settings.yahoo.required_key = 'a'
       end
 
       it     { should be_valid }

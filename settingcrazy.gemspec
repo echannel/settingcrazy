@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{An advanced setting manager for ActiveRecord models}
   gem.homepage      = "https://github.com/echannel/settingcrazy"
 
-  gem.add_development_dependency "rspec", "~> 2.11.0"
+  gem.add_development_dependency "rspec", "~> 2.12.0"
   gem.add_development_dependency "activerecord", "~> 3"
   gem.add_development_dependency "sqlite3"
   gem.add_development_dependency "mocha"

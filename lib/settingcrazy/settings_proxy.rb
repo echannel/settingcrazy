@@ -78,7 +78,7 @@ module SettingCrazy
     end
 
     def inspect
-      @model.reload unless @model.new_record?
+      #@model.reload unless @model.new_record?
       self.to_hash.inspect
     end
 

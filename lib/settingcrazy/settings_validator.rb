@@ -11,7 +11,7 @@ class SettingsValidator < ActiveModel::Validator
         namespaces.each do |name, namespace|
           self.template = namespace.template
           self.settings = record.settings[name]
-          validate_template if namespace.template
+          validate_template(namespace) if namespace.template
         end
       elsif record.settings.template
         self.settings = record.settings
@@ -23,7 +23,7 @@ class SettingsValidator < ActiveModel::Validator
   end
 
   protected
-    def validate_template
+    def validate_template(namespace = nil)
       template.enums.symbolize_keys.each do |key, name_value_pairs|
         enum_options  = template.enum_options(key)
         current_value = settings.send(key)
@@ -36,7 +36,7 @@ class SettingsValidator < ActiveModel::Validator
 
         # determine numerical comparisons to be performed
         comparison_operations = enum_options.keys & OPERATORS.keys
-        validate_numeric(key, current_value, enum_options, comparison_operations) if comparison_operations.present? && current_value.present?
+        validate_numeric(key, current_value, enum_options, comparison_operations, namespace) if comparison_operations.present? && current_value.present?
       end
     end
 
@@ -90,7 +90,7 @@ class SettingsValidator < ActiveModel::Validator
     #@param [Any] value The value provided for this setting
     #@param [Hash] conditions The numeric conditions placed on this setting (e.g. { :greater_than => { value: 0 } })
     #@param [Array] comparison_operations The mathematical operations required for numerical validation (e.g [:greater_than, :less_than_or_equal_to])
-    def validate_numeric(key, value, conditions, comparison_operations)
+    def validate_numeric(key, value, conditions, comparison_operations, namespace)
       comparison_operations.each do |comparison_operation|
         comparison_text = comparison_operation.to_s.gsub('_', ' ')
         operator = OPERATORS[comparison_operation]
@@ -108,7 +108,8 @@ class SettingsValidator < ActiveModel::Validator
         # Checking value against another setting attribute of this record
         elsif conditions[comparison_operation][:attribute].present?
           attribute_for_comparison = conditions[comparison_operation][:attribute]
-          unless value.to_f.send(operator, record.settings.send(attribute_for_comparison).to_f)
+          settings = namespace.present? ? record.settings.send(namespace.name) : record.settings
+          unless value.to_f.send(operator, settings.send(attribute_for_comparison).to_f)
             add_templated_error(key, "Setting, '#{template.name_for(key)}', must be #{comparison_text} '#{template.name_for(attribute_for_comparison)}'")
           end
         end

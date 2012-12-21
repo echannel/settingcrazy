@@ -267,6 +267,25 @@ Or, you can even use a proc
 
     settings_inherit_via :house, :namespace => Proc.new { |room| room.parent_setting_namespace }
 
+## Ignoring a Namespace
+
+In some cases, if you have validations on a namespace but that namespace is not needed your validations will always fail. You can get around this by defining a method on your model called `available_setting_namespaces`. The method should simply return an array of strings or symbols of the namespaces you want to apply in this case. This is useful if a particular instance of you model only needs settings from one or some namespaces.
+
+    class User < ActiveRecord::Base
+      include SettingCrazy
+
+      setting_namespace :user, :template => UserSettings
+      setting_namespace :admin, :template => AdminSettings
+
+      def available_setting_namespaces
+        if admin?
+          %w(user admin)
+        else
+          %(user)
+        end
+      end
+    end
+
 ## Contributing
 
 1. Fork it

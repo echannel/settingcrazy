@@ -194,7 +194,7 @@ describe SettingsValidator do
             end
 
             context 'with a namespace' do
-              subject { FullyTemplatedScenario.create(name: 'TemplatedScenario') }
+              subject { TemplatedScenario.create(name: 'TemplatedScenario') }
 
               context 'for a setting that does NOT satisfy the requirements' do
                 before do

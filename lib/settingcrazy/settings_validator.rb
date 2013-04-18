@@ -5,7 +5,7 @@ class SettingsValidator < ActiveModel::Validator
     record.setting_errors = nil
     self.record  = record
 
-    if record.persisted? # Do not validate setting_values for unsaved owner
+    if record.persisted? # Do not validate setting_values for unsaved owner. This is done due to the workflow of the application, where objects are created before the user is able to set settings for them.
       if record.class._setting_namespaces
         namespaces = record.respond_to?(:available_setting_namespaces) ? record.available_setting_namespaces : record.class._setting_namespaces
         namespaces.each do |name, namespace|

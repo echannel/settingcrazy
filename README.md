@@ -114,6 +114,37 @@ The basic structure of an enum is:
     house.settings.bedroom_count = 1
     house.save!
 
+A setting template can inherit enums from another setting template, by using `enums_inherit_via` in the template definition. This is useful if you want the enums in one template to be a superset of the enums in another template. Enums can be added or overwritten by specifying them as normal.
+
+	class Settings::Vehicle < SettingCrazy::Template::Base
+		enum :passenger_capacity, 'Passenger Capacity', {} do
+			value 1, 'One'
+			value 2, 'Two'
+			value 3, 'Three'
+			value 4, 'Four'
+			# ...
+		end
+	end
+
+	class Settings::Car < SettingCrazy::Template::Base
+		enums_inherit_via Vehicle
+		
+		# New enums can be added
+		enum :wheel_count, 'Wheel Count', {} do
+			value 3, 'Three'
+			value 4, 'Four'
+		end
+		
+		# Existing Enums can be overwritten
+		enum :passenger_capacity, 'Passenger Capacity', {} do
+			value 2, 'Two'
+			value 3, 'Three'
+			value 4, 'Four'
+			value 5, 'Five'
+		end
+	end
+	
+
 #### Validation
 
 Settings validation will only occur for a model that is using a template, or a namespaced template. When validating, Settingcrazy will always validate whether the value set for an option has been defined as a possible value for that option. As well as this automatic validation, there are a number of additional validation options that can be specified per enumeration.

@@ -3,6 +3,9 @@ module SettingCrazy
     class Base
 
       class << self
+        def enums_inherit_via(klass)
+          @enums = klass.enums.merge(self.enums)
+        end
 
         def enum(id, name=id.to_s, options={}, &block)
           enums[id] = SettingCrazy::Template::Enum.new(name, options, &block)

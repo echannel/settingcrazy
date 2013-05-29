@@ -114,7 +114,7 @@ The basic structure of an enum is:
     house.settings.bedroom_count = 1
     house.save!
 
-A setting template can inherit enums from another setting template, by using `enums_inherit_via` in the template definition. This is useful if you want the enums in one template to be a superset of the enums in another template. Enums can be added or overwritten by specifying them as normal.
+A setting template can inherit enums from another setting template by inheriting from that template. This is useful if you want the enums in one template to be a superset of the enums in another template. Enums can be added or overwritten by specifying them as normal.
 
 	class Settings::Vehicle < SettingCrazy::Template::Base
 		enum :passenger_capacity, 'Passenger Capacity', {} do
@@ -126,9 +126,7 @@ A setting template can inherit enums from another setting template, by using `en
 		end
 	end
 
-	class Settings::Car < SettingCrazy::Template::Base
-		enums_inherit_via Vehicle
-		
+	class Settings::Car < Vehicle
 		# New enums can be added
 		enum :wheel_count, 'Wheel Count', {} do
 			value 3, 'Three'

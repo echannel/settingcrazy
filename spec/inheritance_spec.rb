@@ -80,7 +80,7 @@ describe SettingCrazy do
 
     subject { inheriting_templated_scenario.settings.template.enums }
 
-    it 'inherits the settings of the template specified by enums_inherit_via' do
+    it 'inherits the settings of the inherited template' do
       (subject.keys & templated_case.settings.template.enums.keys).should == templated_case.settings.template.enums.keys
     end
 

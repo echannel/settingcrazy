@@ -1,6 +1,4 @@
-class InheritingTemplate < SettingCrazy::Template::Base
-  enums_inherit_via ExampleTemplate
-
+class InheritingTemplate < ExampleTemplate
   # Overwrites an enum inherited from ExampleTemplate
   enum :foo, 'Foo', type: 'text' do
     value 'Foo1Key', 'Foo1Value'

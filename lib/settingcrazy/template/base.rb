@@ -1,20 +1,31 @@
 module SettingCrazy
   module Template
     class Base
+      extend SettingCrazy::AttributeMethods
 
       class << self
-        def enums_inherit_via(klass)
-          @enums = klass.enums.merge(self.enums)
-        end
-
+        # Allows definition of enums in template class. Duplicates existing enums to allow inheritance of enums from parent class without affecting parent enums.
+        # Example Usage:
+        #
+        #   enum :delivery_method, 'Delivery Method', { multiple: false, required: true } do
+        #     value 'STANDARD',    'Standard'
+        #     value 'ACCELERATED', 'Accelerated'
+        #   end
         def enum(id, name=id.to_s, options={}, &block)
-          enums[id] = SettingCrazy::Template::Enum.new(name, options, &block)
+          old_enums = self.enums.dup
+          define_attr_method(:enums) do
+            old_enums.tap do |parent_enums|
+              parent_enums[id] = SettingCrazy::Template::Enum.new(name, options, &block)
+            end
+          end
         end
 
+        # Default enums to empty Hash. Will return structure of enums as defined in template class.
         def enums
-          @enums ||= {}
+          {}
         end
 
+        # Returns the options for the enum with argument key. Response is the third argument passed to enum.
         def enum_options(key)
           enums[key].options
         end

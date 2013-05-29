@@ -86,7 +86,7 @@ describe SettingCrazy do
 
     describe 'specifying new keys in the inheriting template' do
       it 'allows new setting enums to be added' do
-        subject.count.should == templated_case.settings.template.enums.count + 1
+        subject.count.should == templated_case.settings.template.enums.count + 2
       end
 
       it 'adds the new enums to the enum set' do
@@ -108,5 +108,14 @@ describe SettingCrazy do
       end
     end
 
+    describe 'adding enums' do
+      it 'merges the enums hash with each added enum' do
+        subject.keys.should =~ [:foo, :bar, :baz, :example_enum, :required_key, :daily_budget, :cpc]
+      end
+
+      it 'does not merge the enums in the child template with the parent enums' do
+        templated_case.settings.template.enums.keys.should =~ [:foo, :bar, :required_key, :daily_budget, :cpc]
+      end
+    end
   end
 end

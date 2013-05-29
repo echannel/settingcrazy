@@ -10,4 +10,10 @@ class InheritingTemplate < ExampleTemplate
     value 'Baz1Key', 'Baz1Value'
     value 'Baz2Key', 'Baz2Value'
   end
+
+  # Adds another enum
+  enum :example_enum,  'Example Enum', { multiple: false } do
+    value 'true', 'Totally True'
+    value 'false', 'Totally Not True'
+  end
 end

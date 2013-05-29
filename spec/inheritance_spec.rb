@@ -7,7 +7,7 @@ describe SettingCrazy do
       let!(:farm) { Farm.create(:name => "Old MacDonald's") }
       let!(:duck) { farm.ducks.create(:name => "Drake", :quacks => 10) }
       subject     { duck.settings }
-      
+
       before do
         farm.settings.color = "brown"
         farm.save!
@@ -58,7 +58,7 @@ describe SettingCrazy do
       end
     end
   end
-    
+
   context "when the parent has a template" do
     subject { note.settings }
 
@@ -71,6 +71,51 @@ describe SettingCrazy do
     context "but the parent is missing" do
       let!(:note) { Note.create(:name => "Orphaned") }
       its(:foo)   { should be(nil) }
+    end
+  end
+
+  describe 'template enumeration inheritance' do
+    let(:templated_case) { Case.create(name: 'templated case') }
+    let(:inheriting_templated_scenario) { InheritedTemplatedScenario.create(name: "scenario with inheritance") }
+
+    subject { inheriting_templated_scenario.settings.template.enums }
+
+    it 'inherits the settings of the inherited template' do
+      (subject.keys & templated_case.settings.template.enums.keys).should == templated_case.settings.template.enums.keys
+    end
+
+    describe 'specifying new keys in the inheriting template' do
+      it 'allows new setting enums to be added' do
+        subject.count.should == templated_case.settings.template.enums.count + 2
+      end
+
+      it 'adds the new enums to the enum set' do
+        subject.keys.include?(:baz).should be_true
+      end
+
+      it 'does not add the new enum to the template being inherited from' do
+        templated_case.settings.template.enums.keys.include?(:baz).should_not be_true
+      end
+    end
+
+    describe 'overwriting inherited enums' do
+      it 'allows overwriting of inherited enums' do
+        subject[:foo].should == { 'Foo1Value' => 'Foo1Key', 'Foo2Value' => 'Foo2Key' }
+      end
+
+      it 'does not affect the inherited template settings' do
+        templated_case.settings.template.enums[:foo].should == { 'Foo' => '' }
+      end
+    end
+
+    describe 'adding enums' do
+      it 'merges the enums hash with each added enum' do
+        subject.keys.should =~ [:foo, :bar, :baz, :example_enum, :required_key, :daily_budget, :cpc]
+      end
+
+      it 'does not merge the enums in the child template with the parent enums' do
+        templated_case.settings.template.enums.keys.should =~ [:foo, :bar, :required_key, :daily_budget, :cpc]
+      end
     end
   end
 end

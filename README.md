@@ -145,7 +145,15 @@ A setting template can inherit enums from another setting template by inheriting
 
 #### Validation
 
-Settings validation will only occur for a model that is using a template, or a namespaced template. When validating, Settingcrazy will always validate whether the value set for an option has been defined as a possible value for that option. As well as this automatic validation, there are a number of additional validation options that can be specified per enumeration.
+Settings validation will only occur for a model that is using a template, or a namespaced template. By default, validation will only occur on a record that has been persisted, so settings may be invalid on object creation. To validate settings on creation, `validate_settings_on_create true` must be set in the model.
+
+	class House < ActiveRecord::Base
+		include SettingCrazy
+		validate_settings_on_create true
+		...
+	end
+
+When validating, Settingcrazy will always validate whether the value set for an option has been defined as a possible value for that option. As well as this automatic validation, there are a number of additional validation options that can be specified per enumeration.
 
     # multiple (boolean) - Whether it is valid to save more than one entry for a single key
     # dependent ({ enum_key: setting_value }) - A value may only be set for this option if all of the options it is dependent on are set to the specified values

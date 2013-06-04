@@ -5,7 +5,9 @@ class SettingsValidator < ActiveModel::Validator
     record.setting_errors = nil
     self.record  = record
 
-    if record.persisted? # Do not validate setting_values for unsaved owner. This is done due to the workflow of the application, where objects are created before the user is able to set settings for them.
+    # Do not validate setting_values for unsaved owner. This is done due to the workflow of the application, where objects are created before the user is able to set settings for them.
+    # This behaviour can be overwritten by using 'validate_settings_on_create'
+    if record.persisted? || record.class._validate_settings_on_create?
       if record.class._setting_namespaces
         namespaces = record.respond_to?(:available_setting_namespaces) ? record.available_setting_namespaces : record.class._setting_namespaces
         namespaces.each do |name, namespace|
@@ -100,13 +102,15 @@ class SettingsValidator < ActiveModel::Validator
           unless value.to_f.send(operator, conditions[comparison_operation][:value].to_f)
             add_templated_error(key, "Setting, '#{template.name_for(key)}', must be #{comparison_text} #{conditions[comparison_operation][:value]}")
           end
+        end
 
         # Checking value against an attribute of a model associated with this record
-        elsif conditions[comparison_operation][:association].present?
+        if conditions[comparison_operation][:association].present?
           compare_numeric_value_with_association(key, value, conditions, comparison_operation, comparison_text, operator)
+        end
 
         # Checking value against another setting attribute of this record
-        elsif conditions[comparison_operation][:attribute].present?
+        if conditions[comparison_operation][:attribute].present?
           attribute_for_comparison = conditions[comparison_operation][:attribute]
           settings = namespace.present? ? record.settings.send(namespace.name) : record.settings
           unless value.to_f.send(operator, settings.send(attribute_for_comparison).to_f)

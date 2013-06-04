@@ -13,8 +13,18 @@ module SettingCrazy
       @setting_namespaces[name.to_sym] = Namespace.new(name, options)
     end
 
+    def validate_settings_on_create(validate)
+      @validate_settings_on_create = validate
+    end
+
     def _inheritor
       @inheritor
+    end
+
+    # Used by validator to determine whether to validate the settings of
+    # a record that has not yet been persisted
+    def _validate_settings_on_create?
+      @validate_settings_on_create
     end
 
     def _setting_namespaces

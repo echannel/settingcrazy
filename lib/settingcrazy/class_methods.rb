@@ -21,6 +21,8 @@ module SettingCrazy
       @inheritor
     end
 
+    # Used by validator to determine whether to validate the settings of
+    # a record that has not yet been persisted
     def _validate_settings_on_create?
       @validate_settings_on_create
     end

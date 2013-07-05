@@ -71,4 +71,13 @@ describe SettingCrazy::SettingsProxy do
       end
     end
   end
+
+  describe 'retrieving model to which settings are assigned' do
+    let(:model)        { TemplatedCampaign.create(:name => 'TC Fetch Test') }
+    subject            { model.settings }
+
+    it                { should respond_to(:model) }
+    its(:model)       { should be_a(TemplatedCampaign) }
+    its('model.name') { should == 'TC Fetch Test' }
+  end
 end

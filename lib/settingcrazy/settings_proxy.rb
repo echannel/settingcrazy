@@ -1,6 +1,7 @@
 module SettingCrazy
   class SettingsProxy
-    attr_reader :template
+    # FIXME: template and model should be reserved words, so the user can't assign them as settings
+    attr_reader :template, :model
 
     def initialize(model, template)
       @model      = model

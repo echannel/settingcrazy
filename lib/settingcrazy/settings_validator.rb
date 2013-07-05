@@ -107,10 +107,9 @@ class SettingsValidator < ActiveModel::Validator
         # Checking value against an attribute of a model associated with this record
         if conditions[comparison_operation][:association].present?
           compare_numeric_value_with_association(key, value, conditions, comparison_operation, comparison_text, operator)
-        end
 
         # Checking value against another setting attribute of this record
-        if conditions[comparison_operation][:attribute].present?
+        elsif conditions[comparison_operation][:attribute].present?
           attribute_for_comparison = conditions[comparison_operation][:attribute]
           settings = namespace.present? ? record.settings.send(namespace.name) : record.settings
           unless value.to_f.send(operator, settings.send(attribute_for_comparison).to_f)
@@ -139,7 +138,6 @@ class SettingsValidator < ActiveModel::Validator
       else
         comparison_value           = record.send(association).settings.send(association_attribute).to_f
       end
-
 
       unless value.to_f.send(operator, comparison_value)
         error_string = "Setting, '#{template.name_for(key)}', must be #{comparison_text} the"\

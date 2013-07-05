@@ -77,7 +77,6 @@ describe SettingCrazy::SettingsProxy do
     subject            { model.settings }
 
     it                { should respond_to(:model) }
-    its(:model)       { should be_a(TemplatedCampaign) }
-    its('model.name') { should == 'TC Fetch Test' }
+    its(:model)       { should == model }
   end
 end

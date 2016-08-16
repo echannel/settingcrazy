@@ -1,0 +1,10 @@
+/Users/stefan/.rvm/rubies/ruby-1.9.3-p327/bin/ruby -r ./siteconf20160816-42194-1atdrh6.rb extconf.rb
+creating Makefile
+
+make  clean
+
+make
+make: Nothing to be done for `all'.
+
+make  install
+installing default libraries

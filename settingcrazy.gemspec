@@ -13,6 +13,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "sqlite3"
   gem.add_development_dependency "mocha"
   gem.add_development_dependency "pry"
+  gem.add_development_dependency "protected_attributes"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }

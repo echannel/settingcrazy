@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.homepage      = "https://github.com/echannel/settingcrazy"
 
   gem.add_development_dependency "rspec", "~> 2.12.0"
-  gem.add_development_dependency "activerecord", "~> 3"
+  gem.add_development_dependency "activerecord", "~> 4"
   gem.add_development_dependency "sqlite3"
   gem.add_development_dependency "mocha"
   gem.add_development_dependency "pry"

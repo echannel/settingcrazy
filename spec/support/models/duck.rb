@@ -5,9 +5,9 @@ ActiveRecord::Base.connection.create_table(:ducks) do |t|
   t.references :farm
 end
 
-class Duck < ActiveRecord::Base  
+class Duck < ActiveRecord::Base
   include SettingCrazy
-  attr_accessible :name, :quacks
+  attr_accessor :name, :quacks
   belongs_to :farm
   settings_inherit_via :farm
 end

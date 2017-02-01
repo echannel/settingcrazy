@@ -17,9 +17,9 @@ describe SettingCrazy do
       let(:model)   { Scenario.create(:name => "Scenario") }
       subject       { model.settings }
       it            { should be_a(SettingCrazy::SettingsProxy) }
-      its(:google)  { should be_a(SettingCrazy::SettingsProxy) }
-      its(:yahoo)   { should be_a(SettingCrazy::SettingsProxy) }
-      its(:unknown) { should be_nil }
+      it            { subject.google.should be_a(SettingCrazy::SettingsProxy) }
+      it            { subject.yahoo.should be_a(SettingCrazy::SettingsProxy) }
+      it            { subject.unknown.should be_nil }
 
       describe "setting and getting" do
         before do
@@ -28,7 +28,7 @@ describe SettingCrazy do
         end
 
         subject   { model.settings.google }
-        its(:foo) { should == 'bar' }
+        it        { subject.foo.should == 'bar' }
 
         it "should not be set in other namespaces" do
           model.settings.yahoo.foo.should be_nil
@@ -40,9 +40,9 @@ describe SettingCrazy do
       let(:model)   { TemplatedScenario.create(:name => "Scenario") }
       subject       { model.settings }
       it            { should be_a(SettingCrazy::SettingsProxy) }
-      its(:google)  { should be_a(SettingCrazy::SettingsProxy) }
-      its(:yahoo)   { should be_a(SettingCrazy::SettingsProxy) }
-      its(:unknown) { should be_nil }
+      it            { subject.google.should be_a(SettingCrazy::SettingsProxy) }
+      it            { subject.yahoo.should be_a(SettingCrazy::SettingsProxy) }
+      it            { subject.unknown.should be_nil }
 
       it "should have a template for google" do
         subject.google.template.should == ExampleTemplate
@@ -59,7 +59,7 @@ describe SettingCrazy do
         end
 
         subject   { model.settings.google }
-        its(:foo) { should == 'bar' }
+        it        { subject.foo.should == 'bar' }
 
         it "should not be set in other namespaces" do
           model.settings.yahoo.foo.should_not == 'bar'

@@ -13,13 +13,13 @@ describe SettingCrazy do
         farm.save!
       end
 
-      its(:color) { should == "brown" }
+      it { subject.color.should eq('brown')}
     end
 
     context "when there is no parent" do
       let!(:duck) { Duck.create(:name => "Drake", :quacks => 10) }
       subject     { duck.settings }
-      its(:color) { should be(nil) }
+      it          { subject.color.should be(nil) }
     end
 
     context "from a specific namespace on the parent" do
@@ -33,7 +33,7 @@ describe SettingCrazy do
         scenario.save!
       end
 
-      its(:network) { should == "search" }
+      it { subject.network.should eq('search') }
     end
 
     context "from a specific namespace on the parent but set via a Proc" do
@@ -49,12 +49,12 @@ describe SettingCrazy do
 
       context "yahoo" do
         subject       { clever_campaign_y.settings }
-        its(:network) { should == "something" }
+        it            { subject.network.should eq('something') }
       end
 
       context "google" do
         subject       { clever_campaign_g.settings }
-        its(:network) { should == "another thing" }
+        it            { subject.network.should eq('another thing') }
       end
     end
   end
@@ -65,12 +65,12 @@ describe SettingCrazy do
     context "and the parent is present" do
       let!(:_case) { Case.create(:name => "Snowtown") }
       let!(:note)  { _case.notes.create(:name => "The Murderer") }
-      its(:foo)    { should == "1234" }
+      it           { subject.foo.should eq("1234") }
     end
 
     context "but the parent is missing" do
       let!(:note) { Note.create(:name => "Orphaned") }
-      its(:foo)   { should be(nil) }
+      it          { subject.foo.should be(nil) }
     end
   end
 
@@ -90,11 +90,11 @@ describe SettingCrazy do
       end
 
       it 'adds the new enums to the enum set' do
-        subject.keys.include?(:baz).should be_true
+        subject.keys.include?(:baz).should be true
       end
 
       it 'does not add the new enum to the template being inherited from' do
-        templated_case.settings.template.enums.keys.include?(:baz).should_not be_true
+        templated_case.settings.template.enums.keys.include?(:baz).should_not be true
       end
     end
 

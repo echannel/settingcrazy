@@ -8,18 +8,25 @@ describe SettingCrazy::NamespacedSettingsProxy do
 
     context "single values" do
       before    { subject.foo = "bar"; model.save! }
-      its(:foo) { should == 'bar' }
-      its(:oth) { should be(nil) }
+      it        { subject.foo.should == 'bar' }
+      it        { subject.oth.should be(nil) }
       it        { subject[:foo].should == 'bar' }
       it        { subject[:oth].should be(nil) }
 
       it "should apply the namespace to the setting values" do
+        puts subject.to_json
+        puts model.to_json
+        puts namespace.to_json
+
+        model.setting_values(true).each do |s| 
+          puts s.to_json
+        end
         model.setting_values(true).first.namespace.should == 'google'
       end
 
       describe "update a value" do
         before { subject.foo = "different" }
-        its(:foo) { should == "different" }
+        it     { subject.foo.should == "different" }
       end
     end
 
@@ -29,13 +36,13 @@ describe SettingCrazy::NamespacedSettingsProxy do
         model.save!
       end
 
-      its(:foo) { should == [ 'a', 'b', 'c' ] }
+      it { subject.foo.should == [ 'a', 'b', 'c' ] }
 
       describe "update a value" do
         before do
           subject.foo = %w(d e f)
         end
-        its(:foo) { should == [ 'd', 'e', 'f' ] }
+        it { subject.foo.should == [ 'd', 'e', 'f' ] }
       end
     end
   end

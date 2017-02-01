@@ -3,8 +3,8 @@ ActiveRecord::Base.connection.create_table(:farms) do |t|
   t.string :name
 end
 
-class Farm < ActiveRecord::Base  
+class Farm < ActiveRecord::Base
   include SettingCrazy
-  attr_accessible :name
+  attr_accessor :name
   has_many :ducks
 end

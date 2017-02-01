@@ -13,8 +13,8 @@ describe VendorInstance do
       model.save!
     end
 
-    its(:foo) { should == "1234" }
-    its(:bar) { should == "abcd" }
+    it { expect(subject.foo).to eq('1234') }
+    it { expect(subject.bar).to eq('abcd') }
   end
 
   context "mass assignment" do
@@ -28,8 +28,8 @@ describe VendorInstance do
       model.save!
     end
 
-    its(:foo) { should == "some value" }
-    its(:wee) { should == "another" }
+    it { expect(subject.foo).to eq('some value') }
+    it { expect(subject.wee).to eq('another') }
   end
 
   describe "setting namespaces" do
@@ -45,8 +45,8 @@ describe VendorInstance do
         model.save!
       end
 
-      its(:foo) { should == "1234" }
-      its(:bar) { should == "abcd" }
+      it { expect(subject.foo).to eq('1234') }
+      it { expect(subject.bar).to eq('abcd') }
     end
 
     context "mass assignment" do
@@ -62,8 +62,8 @@ describe VendorInstance do
         model.save!
       end
 
-      its(:foo) { should == "some value" }
-      its(:wee) { should == "another" }
+      it { expect(subject.foo).to eq('some value') }
+      it { expect(subject.wee).to eq('another') }
     end
   end
 end

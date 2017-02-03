@@ -14,14 +14,7 @@ describe SettingCrazy::NamespacedSettingsProxy do
       it        { subject[:oth].should be(nil) }
 
       it "should apply the namespace to the setting values" do
-        puts subject.to_json
-        puts model.to_json
-        puts namespace.to_json
-
-        model.setting_values(true).each do |s| 
-          puts s.to_json
-        end
-        model.setting_values(true).first.namespace.should == 'google'
+        model.setting_values.first.namespace.should == 'google'
       end
 
       describe "update a value" do

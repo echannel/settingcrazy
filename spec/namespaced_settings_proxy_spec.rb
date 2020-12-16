@@ -7,14 +7,14 @@ describe SettingCrazy::NamespacedSettingsProxy do
     subject         { SettingCrazy::NamespacedSettingsProxy.new(model, namespace) }
 
     context "single values" do
-      before    { subject.foo = "bar"; model.save! }
+      before(:each)    { subject.foo = "bar"; model.save! }
       its(:foo) { should == 'bar' }
       its(:oth) { should be(nil) }
       it        { subject[:foo].should == 'bar' }
       it        { subject[:oth].should be(nil) }
 
       it "should apply the namespace to the setting values" do
-        model.setting_values(true).first.namespace.should == 'google'
+        model.setting_values.first.namespace.should == 'google'
       end
 
       describe "update a value" do

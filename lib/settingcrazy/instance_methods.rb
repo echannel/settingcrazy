@@ -1,12 +1,12 @@
 
 module SettingCrazy
   module InstanceMethods
-    def assign_attributes(values, options = {})
+    def assign_attributes(values)
       if values.has_key?(:settings)
         self.settings = values.delete(:settings)
       end
 
-      super(values, options)
+      super(values)
     end
 
     def settings

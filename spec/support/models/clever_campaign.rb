@@ -8,6 +8,6 @@ end
 class CleverCampaign < ActiveRecord::Base
   include SettingCrazy
   belongs_to :scenario
-  attr_accessible :name, :setting_namespace
+  attr_accessor :name, :setting_namespace
   settings_inherit_via :scenario, :namespace => Proc.new { |clever_campaign| clever_campaign.setting_namespace }
 end

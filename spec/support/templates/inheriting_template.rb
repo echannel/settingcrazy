@@ -1,3 +1,5 @@
+require 'support/templates/example_template'
+
 class InheritingTemplate < ExampleTemplate
   # Overwrites an enum inherited from ExampleTemplate
   enum :foo, 'Foo', type: 'text' do

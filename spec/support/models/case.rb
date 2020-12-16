@@ -6,6 +6,6 @@ end
 class Case < ActiveRecord::Base  
   include SettingCrazy
   use_setting_template ExampleTemplate
-  attr_accessible :name
+  attr_accessor :name
   has_many :notes
 end

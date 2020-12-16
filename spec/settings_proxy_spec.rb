@@ -38,12 +38,12 @@ describe SettingCrazy::SettingsProxy do
 
     context 'respond_to?' do
       context 'key has not been set' do
-        it { subject.respond_to?(:foo).should be_false }
+        it { subject.respond_to?(:foo).should be false }
       end
 
       context 'key has been set' do
         before { subject.foo = 'bar'; model.save! }
-        it     { subject.respond_to?(:foo).should be_true }
+        it     { subject.respond_to?(:foo).should be true }
       end
     end
   end
@@ -63,11 +63,11 @@ describe SettingCrazy::SettingsProxy do
 
     context 'respond_to?' do
       context 'key is not in enums' do
-        it { subject.respond_to?(:undefined_key).should be_false }
+        it { subject.respond_to?(:undefined_key).should be false }
       end
 
       context 'key is in enums' do
-        it { subject.respond_to?(:required_key).should be_true }
+        it { subject.respond_to?(:required_key).should be true }
       end
     end
   end

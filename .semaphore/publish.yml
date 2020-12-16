@@ -18,5 +18,5 @@ blocks:
       jobs:
         - name: Build gem then publish
           commands:
-            - gem build setting_crazy.gemspec
-            - curl -F package=@`ls setting_crazy*.gem` https://fHtphqCq9zLeDRvssKD4@push.fury.io/echannel/
+            - gem build settingcrazy.gemspec
+            - curl -F package=@`ls settingcrazy*.gem` https://fHtphqCq9zLeDRvssKD4@push.fury.io/echannel/

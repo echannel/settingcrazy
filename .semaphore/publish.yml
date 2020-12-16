@@ -1,0 +1,22 @@
+version: v1.0
+name: Publish
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Publish
+    task:
+      env_vars:
+        - name: RAILS_ENV
+          value: test
+      prologue:
+        commands:
+          - checkout
+          - cache restore
+          - bundle install --deployment --path vendor/bundle
+      jobs:
+        - name: Build gem then publish
+          commands:
+            - gem build setting_crazy.gemspec
+            - curl -F package=@`ls setting_crazy*.gem` https://fHtphqCq9zLeDRvssKD4@push.fury.io/echannel/

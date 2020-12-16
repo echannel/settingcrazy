@@ -1,0 +1,28 @@
+version: v1.0
+name: Run tests
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Rspec
+    task:
+      env_vars:
+        - name: RAILS_ENV
+          value: test
+      prologue:
+        commands:
+          - checkout
+          - cache restore
+          - bundle install --deployment --path vendor/bundle
+      jobs:
+        - name: rspec
+          commands:
+            - bundle exec rspec spec
+promotions:
+  - name: Publish to Gemfury
+    pipeline_file: publish.yml
+    auto_promote_on:
+      - result: passed
+        branch:
+          - master

@@ -6,7 +6,7 @@ end
 
 class Note < ActiveRecord::Base  
   include SettingCrazy
-  attr_accessible :name
+  attr_accessor :name
   belongs_to :case
   settings_inherit_via :case
 end

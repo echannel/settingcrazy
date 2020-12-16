@@ -7,7 +7,7 @@ describe SettingCrazy::NamespacedSettingsProxy do
     subject         { SettingCrazy::NamespacedSettingsProxy.new(model, namespace) }
 
     context "single values" do
-      before    { subject.foo = "bar"; model.save! }
+      before(:each)    { subject.foo = "bar"; model.save! }
       its(:foo) { should == 'bar' }
       its(:oth) { should be(nil) }
       it        { subject[:foo].should == 'bar' }

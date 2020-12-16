@@ -90,11 +90,11 @@ describe SettingCrazy do
       end
 
       it 'adds the new enums to the enum set' do
-        subject.keys.include?(:baz).should be_true
+        subject.keys.include?(:baz).should be true
       end
 
       it 'does not add the new enum to the template being inherited from' do
-        templated_case.settings.template.enums.keys.include?(:baz).should_not be_true
+        templated_case.settings.template.enums.keys.include?(:baz).should_not be  true
       end
     end
 

@@ -7,6 +7,6 @@ end
 class TemplatedCampaign < ActiveRecord::Base
   include SettingCrazy
   belongs_to :scenario
-  attr_accessible :name
+  attr_accessor :name
   use_setting_template ExampleCampaignTemplate
 end

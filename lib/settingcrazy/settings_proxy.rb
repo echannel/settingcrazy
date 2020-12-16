@@ -105,7 +105,7 @@ module SettingCrazy
       def setting_record(attribute)
         # Check valid template attrs
         if template.present? && !template.valid_option?(attribute)
-          raise ActiveRecord::UnknownAttributeError, "Unknown Attribute: #{attribute}"
+          raise ActiveRecord::UnknownAttributeError.new(self, attribute)
         end
         setting_values.select{|sv| sv.key.to_sym == attribute.to_sym }.last # When updating an existing setting_value, the new value comes after the existing value in the array.
       end

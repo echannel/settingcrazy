@@ -2,16 +2,16 @@
 require File.expand_path('../lib/settingcrazy/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["Dan Draper"]
-  gem.email         = ["daniel@codefire.com"]
+  gem.authors       = ["Dynamic Creative"]
+  gem.email         = ["support@dynamiccreative.com"]
   gem.description   = %q{An advanced setting manager for ActiveRecord models}
   gem.summary       = %q{An advanced setting manager for ActiveRecord models}
   gem.homepage      = "https://github.com/echannel/settingcrazy"
 
   gem.add_development_dependency "rspec"
   gem.add_development_dependency "rspec-its"
-  gem.add_development_dependency "activerecord", "~> 4"
-  gem.add_development_dependency "sqlite3", "~> 1.3.13"
+  gem.add_development_dependency "activerecord"
+  gem.add_development_dependency "sqlite3"
   gem.add_development_dependency "mocha"
   gem.add_development_dependency "pry"
 

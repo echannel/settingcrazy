@@ -7,6 +7,5 @@ end
 class Campaign < ActiveRecord::Base
   include SettingCrazy
   belongs_to :scenario
-  attr_accessor :name
   settings_inherit_via :scenario, :namespace => :google
 end

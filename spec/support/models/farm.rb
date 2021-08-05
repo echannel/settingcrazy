@@ -5,6 +5,5 @@ end
 
 class Farm < ActiveRecord::Base  
   include SettingCrazy
-  attr_accessor :name
   has_many :ducks
 end

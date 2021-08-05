@@ -5,6 +5,5 @@ end
 
 class InheritedTemplatedScenario < ActiveRecord::Base
   include SettingCrazy
-  attr_accessor :name
   use_setting_template InheritingTemplate
 end

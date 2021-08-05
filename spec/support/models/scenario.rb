@@ -8,7 +8,6 @@ class Scenario < ActiveRecord::Base
   has_many :campaigns
   has_many :clever_campaigns
   has_many :templated_namespaced_campaigns
-  attr_accessor :name
   setting_namespace :google
   setting_namespace :yahoo
 end

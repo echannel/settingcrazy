@@ -7,7 +7,6 @@ end
 class TemplatedNamespacedCampaign < ActiveRecord::Base
   include SettingCrazy
   belongs_to :scenario
-  attr_accessor :name
   use_setting_template ExampleCampaignTemplate
   settings_inherit_via :scenario, namespace: :google
 end

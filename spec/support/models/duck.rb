@@ -7,7 +7,6 @@ end
 
 class Duck < ActiveRecord::Base  
   include SettingCrazy
-  attr_accessor :name, :quacks
   belongs_to :farm
   settings_inherit_via :farm
 end

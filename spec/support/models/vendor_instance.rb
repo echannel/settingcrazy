@@ -6,5 +6,4 @@ end
 class VendorInstance < ActiveRecord::Base
   include SettingCrazy
   setting_namespace :google
-  attr_accessor :name
 end

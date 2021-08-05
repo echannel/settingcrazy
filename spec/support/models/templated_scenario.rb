@@ -5,7 +5,6 @@ end
 
 class TemplatedScenario < ActiveRecord::Base  
   include SettingCrazy
-  attr_accessor :name
   setting_namespace :google, :template => ExampleTemplate
   setting_namespace :yahoo
 end
